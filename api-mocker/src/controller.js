@@ -98,7 +98,7 @@ export default {
     response(res, directories.map((dir, idx) => ({ id: idx + 1, name: dir })));
   },
   /**
-   * Get collection (table) from database designated in the request.
+   * Get a list of collection (table) from designated database in the request.
    *
    * @param {IncomingRequest} req
    * @param {ServerResponse} res
@@ -152,7 +152,7 @@ export default {
     response(res, result.map((row) => ({ data: row })));
   },
   /**
-   * Update an record using the information provided in the request.
+   * Update the record requested by the request.
    *
    * @param {IncomingRequest} req
    * @param {ServerResponse} res
@@ -167,7 +167,7 @@ export default {
     response(res, { data: result });
   },
   /**
-   * Delete an object using the information provided in the request.
+   * Delete the requested object.
    *
    * @param {IncomingRequest} req
    * @param {ServerResponse} res
