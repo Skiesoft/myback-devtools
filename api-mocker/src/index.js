@@ -25,15 +25,15 @@ async function fakeServer(req, res) {
         case 'DELETE':
           return Controller.deleteObject(req, res);
         default:
-          break;
+          res.statusCode = 400;
+          return res.send();
       }
-      break;
     case ((/^resource\/[^/]+\/collection\/[^/]+\/object\/query$/).test(path) && method === 'GET'):
       return Controller.queryObject(req, res);
     default:
-      break;
+      res.statusCode = 400;
+      return res.send();
   }
-  return null;
 }
 
 /**

@@ -134,7 +134,12 @@ export default {
     const db = await getDB(req);
     const columns = Object.keys(req.body).join(',');
     const values = Object.values(req.body).map((v) => `'${v}'`).join(',');
-    await db.run(`INSERT INTO ${collectionId} (${columns}) VALUES (${values})`);
+    try {
+      await db.run(`INSERT INTO ${collectionId} (${columns}) VALUES (${values})`);
+    } catch (error) {
+      res.statusCode = 400;
+      res.send({ error: error.message });
+    }
     const result = await db.get(`SELECT * FROM ${collectionId} ${whereParser(req.body)}`);
     response(res, { data: result });
   },
@@ -162,7 +167,12 @@ export default {
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     const setter = Object.entries(req.body.data).map(([k, v]) => `${k}='${v}'`).join(', ');
-    await db.run(`UPDATE ${collectionId} SET ${setter} ${whereParser(matcher)}`);
+    try {
+      await db.run(`UPDATE ${collectionId} SET ${setter} ${whereParser(matcher)}`);
+    } catch (error) {
+      res.statusCode = 400;
+      res.send({ error: error.message });
+    }
     const result = await db.get(`SELECT * FROM ${collectionId} ${whereParser(req.body.data)}`);
     response(res, { data: result });
   },
@@ -176,6 +186,11 @@ export default {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
-    await db.run(`DELETE FROM ${collectionId} ${whereParser(matcher)}`);
+    try {
+      await db.run(`DELETE FROM ${collectionId} ${whereParser(matcher)}`);
+    } catch (error) {
+      res.statusCode = 400;
+      res.send({ error: error.message });
+    }
   },
 };
