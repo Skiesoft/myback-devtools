@@ -47,7 +47,7 @@ export default class CollectionModel extends SDKInterface {
     let uri = `resource/${resourceId}`;
     uri += `/collection/${collectionId}`;
     uri += '/object';
-    const res = await this.request(SDKInterface.HTTP_POST, uri, { data: properties });
+    const res = await this.request(SDKInterface.HTTP_POST, uri, properties);
     return new ObjectModel(resourceId, collectionId, res.data);
   }
 
