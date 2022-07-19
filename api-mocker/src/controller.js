@@ -138,7 +138,7 @@ export default {
       await db.run(`INSERT INTO ${collectionId} (${columns}) VALUES (${values})`);
     } catch (error) {
       res.statusCode = 400;
-      res.send({ error: error.message });
+      res.send(JSON.stringify({ error: error.message }));
     }
     const result = await db.get(`SELECT * FROM ${collectionId} ${whereParser(req.body)}`);
     response(res, { data: result });
@@ -168,13 +168,14 @@ export default {
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     const setter = Object.entries(req.body.data).map(([k, v]) => `${k}='${v}'`).join(', ');
     try {
-      await db.run(`UPDATE ${collectionId} SET ${setter} ${whereParser(matcher)}`);
+      const { rowid } = await db.get(`SELECT rowid FROM ${collectionId} ${whereParser(matcher)}`);
+      await db.run(`UPDATE ${collectionId} SET ${setter} WHERE rowid=${rowid}`);
+      const result = await db.get(`SELECT * FROM ${collectionId} WHERE rowid=${rowid}`);
+      response(res, { data: result });
     } catch (error) {
       res.statusCode = 400;
-      res.send({ error: error.message });
+      res.send(JSON.stringify({ error: error.message }));
     }
-    const result = await db.get(`SELECT * FROM ${collectionId} ${whereParser(req.body.data)}`);
-    response(res, { data: result });
   },
   /**
    * Delete the requested object.
@@ -187,10 +188,10 @@ export default {
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     try {
-      await db.run(`DELETE FROM ${collectionId} ${whereParser(matcher)}`);
+      await db.run(`DELETE FROM ${collectionId} WHERE rowid=(SELECT rowid FROM ${collectionId} ${whereParser(matcher)} LIMIT 1)`);
     } catch (error) {
       res.statusCode = 400;
-      res.send({ error: error.message });
+      res.send(JSON.stringify({ error: error.message }));
     }
   },
 };
