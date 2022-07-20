@@ -5,7 +5,9 @@ To get started:
 ```{eval-rst}
 .. toctree::
     :maxdepth: 1
-
+    :caption: Getting Started
+    
+    Home <self>
     getting-started/index.md
 ```
 
