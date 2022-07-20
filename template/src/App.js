@@ -7,6 +7,8 @@ function App() {
   const [collections, setCollections] = useState();
   const [workingCollection, setWorkingCollection] = useState();
   const [objects, setObjects] = useState();
+  const [keys, setKeys] = useState([]);
+  const [values, setValues] = useState([]);
 
   const fetchCollections = async () => {
     try {
@@ -33,21 +35,76 @@ function App() {
     fetchData();
   }, [workingCollection]);
 
+  const createObjectFromFormTable = async () => {
+    const obj = Object.assign.apply({}, keys.map((v, i) => ({ [v]: values[i] })));
+    await workingCollection?.createObject(obj);
+    await fetchData();
+  };
+
   return (
     <div className="App">
-      {collections?.map((collection, index) => <h1 key={index}>{collection.collectionId}</h1>)}
-      <input type='text' onChange={e => setWorkingCollection(collections?.find(v => v.collectionId == e.target.value))}></input>
+      <h1>Collections</h1>
+      {collections?.map((collection, index) => <h2 key={index}>{collection.collectionId}</h2>)}
+      <div>
+        <span>working collection: </span>
+        <input type='text' onChange={e => setWorkingCollection(collections?.find(v => v.collectionId == e.target.value))}></input>
+      </div>
       {objects?.map((object, index) => <div key={index}>
         {((obj) => {
           let ret = [];
           let i = 0;
           for (const [key, value] of Object.entries(obj.properties)) {
-            ret.push(<div key={i++}>{value}</div>)
+            ret.push(<div key={i++}><b>{key}:</b> {value} <button onClick={() => {
+              obj.destroy();
+              fetchData();
+            }}> - </button></div>)
           }
           return ret;
         })(object)}
       </div>)}
-    </div>
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th style={{ textAlign: 'center' }}>Key</th>
+              <th style={{ textAlign: 'center' }}>Value</th>
+              <th><button onClick={() => {
+                setKeys([...keys, ""]);
+                setValues([...values, ""]);
+              }}>+</button></th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {((keys, setKeys, values, setValues) => {
+              let ret = [];
+              for (let i = 0; i < keys.length; i++) {
+                ret.push(
+                  <tr key={i}>
+                    <th><input type="text" onChange={e => {
+                      const val = e.target.value;
+                      let newKeys = [...keys];
+                      newKeys[i] = val;
+                      setKeys(newKeys);
+                    }} value={keys[i]}></input></th>
+                    <th><input type="text" onChange={e => {
+                      const val = e.target.value;
+                      let newValues = [...values];
+                      newValues[i] = val;
+                      setValues(newValues);
+                    }} value={values[i]}></input></th>
+                  </tr>
+                );
+              }
+              return ret;
+            })(keys, setKeys, values, setValues)}
+          </tbody>
+        </table>
+        <button onClick={() => {
+          createObjectFromFormTable();
+        }}>submit</button>
+      </div>
+    </div >
   );
 }
 
