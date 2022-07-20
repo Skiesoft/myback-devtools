@@ -29,11 +29,11 @@ export default class CollectionModel extends SDKInterface {
  */
   async getPage(pageId = 0, limit = 24) {
     const { resourceId, collectionId } = this;
-    let uri = `/resource/${resourceId}`;
+    let uri = `resource/${resourceId}`;
     uri += `/collection/${collectionId}`;
-    uri += `/object?limit=${limit}&offset=${pageId}`;
+    uri += `/object?pageSize=${limit}&page=${pageId}`;
     const res = await this.request(SDKInterface.HTTP_GET, uri);
-    return res.data.map(({ data: properties }) => new ObjectModel(resourceId, collectionId, properties));
+    return res.data.data.map((properties) => new ObjectModel(resourceId, collectionId, properties));
   }
 
   /**
@@ -48,7 +48,7 @@ export default class CollectionModel extends SDKInterface {
     uri += `/collection/${collectionId}`;
     uri += '/object';
     const res = await this.request(SDKInterface.HTTP_POST, uri, properties);
-    return new ObjectModel(resourceId, collectionId, res.data);
+    return new ObjectModel(resourceId, collectionId, res.data.data);
   }
 
   /**
@@ -63,8 +63,8 @@ export default class CollectionModel extends SDKInterface {
     const { resourceId, collectionId } = this;
     let uri = `resource/${resourceId}`;
     uri += `/collection/${collectionId}`;
-    uri += `/object?limit=${limit}&offset=${pageId}&matcher=${querybuilder.toString()}`;
+    uri += `/object?pageSize=${limit}&page=${pageId}&matcher=${querybuilder.toString()}`;
     const res = await this.request(SDKInterface.HTTP_GET, uri);
-    return res.data.map(({ data: properties }) => new ObjectModel(resourceId, collectionId, properties));
+    return res.data.data.map((properties) => new ObjectModel(resourceId, collectionId, properties));
   }
 }

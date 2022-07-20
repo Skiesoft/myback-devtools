@@ -95,7 +95,7 @@ export default {
    */
   getResources: async (req, res) => {
     const directories = listDataDir('/');
-    response(res, directories.map((dir, idx) => ({ id: idx + 1, name: dir })));
+    response(res, { data: directories.map((dir, idx) => ({ id: idx + 1, name: dir })) });
   },
   /**
    * Get a list of collection (table) from designated database in the request.
@@ -106,7 +106,7 @@ export default {
   getCollections: async (req, res) => {
     const db = await getDB(req);
     const result = await db.all("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%'");
-    response(res, result.map((row) => ({ id: row.name })));
+    response(res, { data: result.map((row) => ({ id: row.name })) });
   },
   /**
    * Retrieve data from requested resource and collection in a page manner.
@@ -117,11 +117,10 @@ export default {
   getPage: async (req, res) => {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
-    const offset = reqUrl.searchParams.get('offset') ?? 0;
-    const limit = reqUrl.searchParams.get('limit') ?? 24;
-
-    const result = await db.all(`SELECT * FROM ${collectionId} LIMIT ${limit} OFFSET ${offset}`);
-    response(res, result.map((row) => ({ data: row })));
+    const page = reqUrl.searchParams.get('page') ?? 0;
+    const pageSize = reqUrl.searchParams.get('pageSize') ?? 24;
+    const result = await db.all(`SELECT * FROM ${collectionId} LIMIT ${pageSize} OFFSET ${page * pageSize}`);
+    response(res, { data: result });
   },
   /**
    * Create a new record contained in the request.
@@ -140,7 +139,8 @@ export default {
       res.statusCode = 400;
       res.send(JSON.stringify({ error: error.message }));
     }
-    const result = await db.get(`SELECT * FROM ${collectionId} ${whereParser(req.body)}`);
+    const rowid = (await db.get('SELECT last_insert_rowid()'))['last_insert_rowid()'];
+    const result = await db.get(`SELECT * FROM ${collectionId} WHERE rowid=${rowid}`);
     response(res, { data: result });
   },
   /**
@@ -153,8 +153,15 @@ export default {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
-    const result = await db.all(`SELECT * FROM ${collectionId} ${whereParser(matcher)}`);
-    response(res, result.map((row) => ({ data: row })));
+    const page = reqUrl.searchParams.get('page') ?? 0;
+    const pageSize = reqUrl.searchParams.get('pageSize') ?? 24;
+    Object.keys(matcher).forEach(key => {
+      if (matcher[key] === null) {
+        delete matcher[key];
+      }
+    });
+    const result = await db.all(`SELECT * FROM ${collectionId} ${whereParser(matcher)} LIMIT ${pageSize} OFFSET ${page * pageSize}`);
+    response(res, { data: result });
   },
   /**
    * Update the record requested by the request.
@@ -167,6 +174,11 @@ export default {
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     const setter = Object.entries(req.body.data).map(([k, v]) => `${k}='${v}'`).join(', ');
+    Object.keys(matcher).forEach(key => {
+      if (matcher[key] === null) {
+        delete matcher[key];
+      }
+    });
     try {
       const { rowid } = await db.get(`SELECT rowid FROM ${collectionId} ${whereParser(matcher)}`);
       await db.run(`UPDATE ${collectionId} SET ${setter} WHERE rowid=${rowid}`);
@@ -187,6 +199,11 @@ export default {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
+    Object.keys(matcher).forEach(key => {
+      if (matcher[key] === null) {
+        delete matcher[key];
+      }
+    });
     try {
       await db.run(`DELETE FROM ${collectionId} WHERE rowid=(SELECT rowid FROM ${collectionId} ${whereParser(matcher)} LIMIT 1)`);
     } catch (error) {

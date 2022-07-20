@@ -14,7 +14,7 @@ export class SDK extends SDKInterface {
    */
   async getResources() {
     const res = await this.request(SDKInterface.HTTP_GET, 'resource/');
-    return res.data.map(({ id }) => new ResourceModel(id));
+    return res.data.data.map(({ id }) => new ResourceModel(id));
   }
 }
 

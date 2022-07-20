@@ -25,6 +25,6 @@ export default class ResourceModel extends SDKInterface {
   async getCollections() {
     const { resourceId } = this;
     const res = await this.request(SDKInterface.HTTP_GET, `resource/${resourceId}`);
-    return res.data.map(({ id }) => new CollectionModel(resourceId, id));
+    return res.data.data.map(({ id }) => new CollectionModel(resourceId, id));
   }
 }

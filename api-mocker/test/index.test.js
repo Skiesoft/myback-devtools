@@ -14,7 +14,7 @@ test('server routing - resource index', async () => {
     url: 'resource/',
     method: 'GET',
   }, res);
-  const resources = res.get();
+  const resources = res.get().data;
   expect(resources.length).toBe(1);
   expect(resources[0].name).toBe('example.db');
 });
@@ -25,7 +25,7 @@ test('server routing - collection index', async () => {
     url: 'resource/1',
     method: 'GET',
   }, res);
-  const collection = res.get();
+  const collection = res.get().data;
   expect(collection.length).toBe(1);
   expect(collection[0].id).toBe('one');
 });
@@ -36,7 +36,7 @@ test('server routing - get object page', async () => {
     url: 'resource/1/collection/one/object',
     method: 'GET',
   }, res);
-  const object = res.get();
+  const object = res.get().data;
   expect(object.length).toBeLessThanOrEqual(24);
 });
 

@@ -4,7 +4,7 @@ import MockResponse from './mock-response';
 test('get resources', async () => {
   const res = new MockResponse();
   await Controller.getResources({}, res);
-  const resources = res.get();
+  const resources = res.get().data;
   expect(resources.length).toBe(1);
   expect(resources[0].name).toBe('example.db');
 });
@@ -13,7 +13,7 @@ test('get collections', async () => {
   const req = { url: 'resource/1' };
   const res = new MockResponse();
   await Controller.getCollections(req, res);
-  const collection = res.get();
+  const collection = res.get().data;
   expect(collection.length).toBe(1);
   expect(collection[0].id).toBe('one');
 });
@@ -22,7 +22,7 @@ test('get pages', async () => {
   const req = { url: 'resource/1/collection/one/object' };
   const res = new MockResponse();
   await Controller.getPage(req, res);
-  const object = res.get();
+  const object = res.get().data;
   expect(object.length).toBeLessThanOrEqual(24);
 });
 
@@ -44,9 +44,9 @@ test('query object', async () => {
   };
   const res = new MockResponse();
   await Controller.queryObject(req, res);
-  const records = res.get();
+  const records = res.get().data;
   records.forEach((record) => {
-    expect(record.data.field1).toBe(1);
+    expect(record.field1).toBe(1);
   });
 });
 

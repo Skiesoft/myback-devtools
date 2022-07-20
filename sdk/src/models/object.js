@@ -48,7 +48,7 @@ export default class ObjectModel extends SDKInterface {
     const {
       resourceId, collectionId, oldProperties, properties,
     } = this;
-    let uri = `/resource/${resourceId}`;
+    let uri = `resource/${resourceId}`;
     uri += `/collection/${collectionId}`;
     uri += `/object?match=${JSON.stringify(oldProperties)}`;
     const res = await this.request(SDKInterface.HTTP_PUT, uri, { data: properties });
@@ -62,7 +62,7 @@ export default class ObjectModel extends SDKInterface {
     const {
       resourceId, collectionId, oldProperties,
     } = this;
-    let uri = `/resource/${resourceId}`;
+    let uri = `resource/${resourceId}`;
     uri += `/collection/${collectionId}`;
     uri += `/object?match=${JSON.stringify(oldProperties)}`;
     await this.request(SDKInterface.HTTP_DELETE, uri);
