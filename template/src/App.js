@@ -9,6 +9,7 @@ function App() {
   const [objects, setObjects] = useState();
   const [keys, setKeys] = useState([]);
   const [values, setValues] = useState([]);
+  const [page, setPage] = useState(0);
 
   const fetchCollections = async () => {
     try {
@@ -25,7 +26,7 @@ function App() {
 
   const fetchData = async () => {
     try {
-      const response = await workingCollection?.getPage();
+      const response = await workingCollection?.getPage(page);
       setObjects(response);
     } catch (error) {
       console.log(error);
@@ -33,7 +34,7 @@ function App() {
   }
   useEffect(() => {
     fetchData();
-  }, [workingCollection]);
+  }, [workingCollection, page]);
 
   const createObjectFromFormTable = async () => {
     const obj = Object.assign.apply({}, keys.map((v, i) => ({ [v]: values[i] })));
@@ -62,6 +63,11 @@ function App() {
           return ret;
         })(object)}
       </div>)}
+      <div>
+        <button onClick={() => { setPage((page - 1 >= 0) ? page - 1 : page) }}>&lt;</button>
+        {page}
+        <button onClick={() => { setPage(page + 1) }}>&gt;</button>
+      </div>
       <div>
         <table>
           <thead>
