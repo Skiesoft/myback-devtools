@@ -6,6 +6,7 @@
   "types": "./types/index.d.ts",
   "scripts": {
     "build": "babel src -d dist",
+    "watch": "babel -w src -d dist",
     "test": "jest --collect-coverage"
   },
   "jest": {

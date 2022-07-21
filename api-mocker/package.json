@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "babel src -d dist",
+    "watch": "babel -w src -d dist",
     "test": "jest --runInBand --collect-coverage"
   },
   "jest": {
