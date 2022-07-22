@@ -131,8 +131,13 @@ export default {
   createObject: async (req, res) => {
     const { collectionId } = parseReq(req);
     const db = await getDB(req);
-    const columns = Object.keys(req.body).join(',');
-    const values = Object.values(req.body).map((v) => `'${v}'`).join(',');
+    if (!req.body) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Missing Body' } });
+      return;
+    }
+    const columns = Object.keys(req.body.data).join(',');
+    const values = Object.values(req.body.data).map((v) => `'${v}'`).join(',');
     try {
       await db.run(`INSERT INTO ${collectionId} (${columns}) VALUES (${values})`);
     } catch (error) {
@@ -178,12 +183,17 @@ export default {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
-    const setter = Object.entries(req.body.data).map(([k, v]) => `${k}='${v}'`).join(', ');
-    if (matcher === null) {
+    if (!req.body.data) {
+      res.statusCode = 400;
+      res.send(JSON.stringify({ error: 'Missing Body' }));
+      return;
+    }
+    if (!matcher) {
       res.statusCode = 400;
       res.send(JSON.stringify({ error: 'Missing Matcher' }));
       return;
     }
+    const setter = Object.entries(req.body.data).map(([k, v]) => `${k}='${v}'`).join(', ');
     Object.keys(matcher).forEach((key) => {
       if (matcher[key] === null) {
         delete matcher[key];
