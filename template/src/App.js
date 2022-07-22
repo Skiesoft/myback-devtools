@@ -99,6 +99,14 @@ function App() {
                       newValues[i] = val;
                       setValues(newValues);
                     }} value={values[i]}></input></th>
+                    <th><button onClick={() => {
+                      const dupKeys = [...keys];
+                      const dupValues = [...values];
+                      dupKeys.splice(i, 1);
+                      dupValues.splice(i, 1);
+                      setKeys(dupKeys);
+                      setValues(dupValues);
+                    }}> - </button></th>
                   </tr>
                 );
               }
