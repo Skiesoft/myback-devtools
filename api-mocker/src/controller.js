@@ -155,7 +155,12 @@ export default {
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     const page = reqUrl.searchParams.get('page') ?? 0;
     const pageSize = reqUrl.searchParams.get('pageSize') ?? 24;
-    Object.keys(matcher).forEach(key => {
+    if (matcher === null) {
+      res.statusCode = 400;
+      res.send(JSON.stringify({ error: 'Missing Matcher' }));
+      return;
+    }
+    Object.keys(matcher).forEach((key) => {
       if (matcher[key] === null) {
         delete matcher[key];
       }
@@ -174,7 +179,12 @@ export default {
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     const setter = Object.entries(req.body.data).map(([k, v]) => `${k}='${v}'`).join(', ');
-    Object.keys(matcher).forEach(key => {
+    if (matcher === null) {
+      res.statusCode = 400;
+      res.send(JSON.stringify({ error: 'Missing Matcher' }));
+      return;
+    }
+    Object.keys(matcher).forEach((key) => {
       if (matcher[key] === null) {
         delete matcher[key];
       }
@@ -199,7 +209,12 @@ export default {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
-    Object.keys(matcher).forEach(key => {
+    if (matcher === null) {
+      res.statusCode = 400;
+      res.send(JSON.stringify({ error: 'Missing Matcher' }));
+      return;
+    }
+    Object.keys(matcher).forEach((key) => {
       if (matcher[key] === null) {
         delete matcher[key];
       }
