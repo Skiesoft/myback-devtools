@@ -10,6 +10,7 @@ function App() {
   const [keys, setKeys] = useState([]);
   const [values, setValues] = useState([]);
   const [page, setPage] = useState(0);
+  const [relation, setRelation] = useState();
 
   const fetchCollections = async () => {
     try {
@@ -55,10 +56,16 @@ function App() {
           let ret = [];
           let i = 0;
           for (const [key, value] of Object.entries(obj.properties)) {
-            ret.push(<div key={i++}><b>{key}:</b> {value} <button onClick={() => {
-              obj.destroy();
-              fetchData();
-            }}> - </button></div>)
+            ret.push(<div key={i++}>
+              <b>{key}:</b> {value}
+              <button onClick={() => {
+                obj.destroy();
+                fetchData();
+              }}> - </button>
+              <button onClick={async () => {
+                setRelation(await object.getRelation());
+              }}> <b>*</b> </button>
+            </div>)
           }
           return ret;
         })(object)}
@@ -67,6 +74,28 @@ function App() {
         <button onClick={() => { setPage((page - 1 >= 0) ? page - 1 : page) }}>&lt;</button>
         {page}
         <button onClick={() => { setPage(page + 1) }}>&gt;</button>
+      </div>
+      <div>
+        <h1>Relation</h1>
+        <h2>Inbound</h2>
+        {relation?.getInboundRelationships().map(({ collectionId, data }) => {
+          return (
+            <div>
+              <h3>{collectionId}</h3>
+              {JSON.stringify(data)}
+            </div>
+          )
+        })}
+        <h2>Outbound</h2>
+        {relation?.getOutboundRelationships().map(({ collectionId, data }) => {
+          return (
+            <div>
+              <h3>{collectionId}</h3>
+              {JSON.stringify(data)}
+            </div>
+          )
+        })}
+        <hr />
       </div>
       <div>
         <table>
