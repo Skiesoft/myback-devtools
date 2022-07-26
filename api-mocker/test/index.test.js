@@ -26,7 +26,7 @@ test('server routing - collection index', async () => {
     method: 'GET',
   }, res);
   const collection = res.get().data;
-  expect(collection.length).toBe(1);
+  expect(collection.length).toBe(3);
   expect(collection[0].id).toBe('one');
 });
 
@@ -45,7 +45,7 @@ test('server routing - create object', async () => {
   await fakeServer({
     url: 'resource/1/collection/one/object',
     method: 'POST',
-    body: { field1: 1, field2: 'somestr' },
+    body: { data: { field1: 1, field2: 'somestr' } },
   }, res);
   const record = res.get().data;
   expect(record.field1).toBe(1);
@@ -70,4 +70,15 @@ test('server routing - delete object', async () => {
     url: 'resource/1/collection/one/object?matcher={"field1":1,"field2":"somestr"}',
     method: 'DELETE',
   }, res);
+});
+
+test('server routing - get relation', async () => {
+  const res = new MockResponse();
+  await fakeServer({
+    url: 'resource/1/collection/three/object/relation?matcher={"ref1": 2, "ref2": 1}',
+    method: 'GET',
+  }, res);
+  const record = res.get();
+  expect(record.out.one.data[0].id).toBe(2);
+  expect(record.out.two.data[0].id).toBe(1);
 });

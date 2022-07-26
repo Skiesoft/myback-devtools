@@ -14,7 +14,7 @@ test('get collections', async () => {
   const res = new MockResponse();
   await Controller.getCollections(req, res);
   const collection = res.get().data;
-  expect(collection.length).toBe(1);
+  expect(collection.length).toBe(3);
   expect(collection[0].id).toBe('one');
 });
 
@@ -29,13 +29,13 @@ test('get pages', async () => {
 test('create object', async () => {
   const req = {
     url: 'resource/1/collection/one/object',
-    body: { field1: 1, field2: 'somestr' },
+    body: { data: { field1: 1, field2: 'somestr' } },
   };
   const res = new MockResponse();
   await Controller.createObject(req, res);
   const record = res.get().data;
-  expect(record.field1).toBe(req.body.field1);
-  expect(record.field2).toBe(req.body.field2);
+  expect(record.field1).toBe(req.body.data.field1);
+  expect(record.field2).toBe(req.body.data.field2);
 });
 
 test('query object', async () => {
