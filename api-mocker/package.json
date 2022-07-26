@@ -1,5 +1,5 @@
 {
-  "name": "api-mocker",
+  "name": "@feline-studio/myback-api-mocker",
   "version": "1.0.0",
   "description": "Mock fake API for MyBack module development.",
   "main": "./dist/index.js",

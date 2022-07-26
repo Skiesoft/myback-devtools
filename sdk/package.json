@@ -1,5 +1,5 @@
 {
-  "name": "myback-sdk",
+  "name": "@feline-studio/myback-sdk",
   "version": "0.1.0",
   "description": "Software Development Kit for Myback module.",
   "main": "./dist/index.js",
