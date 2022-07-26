@@ -1,4 +1,5 @@
 import SDKInterface from '../interface';
+import RelationModel from './relation';
 
 /**
  * Object model represent a backend row (record).
@@ -35,7 +36,6 @@ export default class ObjectModel extends SDKInterface {
    * Update the value the attribute.
    * @param {string} attribute.
    * @param {object} newVal.
-   * @return {object}
    */
   set(attribute, newVal) {
     this.properties[attribute] = newVal;
@@ -73,10 +73,16 @@ export default class ObjectModel extends SDKInterface {
 
   /**
    * Return the relation to the specific collection.
-   * @param {string} collectionId
    * @return {object}
    */
-  getRelation(collectionId) {
-
+  async getRelation() {
+    const {
+      resourceId, collectionId, oldProperties,
+    } = this;
+    let uri = `resource/${resourceId}`;
+    uri += `/collection/${collectionId}`;
+    uri += `/object/relation?matcher=${JSON.stringify(oldProperties)}`;
+    const res = await this.request(SDKInterface.HTTP_GET, uri);
+    return new RelationModel(resourceId, collectionId, res.data);
   }
 }

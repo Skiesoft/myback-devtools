@@ -200,7 +200,7 @@ export default {
       }
     });
     try {
-      const { rowid } = await db.get(`SELECT rowid FROM ${collectionId} ${whereParser(matcher)}`);
+      const rowid = Object.values(await db.get(`SELECT rowid FROM ${collectionId} ${whereParser(matcher)}`))[0];
       await db.run(`UPDATE ${collectionId} SET ${setter} WHERE rowid=${rowid}`);
       const result = await db.get(`SELECT * FROM ${collectionId} WHERE rowid=${rowid}`);
       response(res, { data: result });
@@ -231,6 +231,51 @@ export default {
     });
     try {
       await db.run(`DELETE FROM ${collectionId} WHERE rowid=(SELECT rowid FROM ${collectionId} ${whereParser(matcher)} LIMIT 1)`);
+    } catch (error) {
+      res.statusCode = 400;
+      res.send(JSON.stringify({ error: error.message }));
+    }
+  },
+  /**
+   * Get related objects of an object.
+   *
+   * @param {IncomingRequest} req 
+   * @param {ServerResponse} res 
+   */
+  getRelation: async (req, res) => {
+    const { url: reqUrl, collectionId } = parseReq(req);
+    const db = await getDB(req);
+    const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
+    if (matcher === null) {
+      res.statusCode = 400;
+      res.send(JSON.stringify({ error: 'Missing Matcher' }));
+      return;
+    }
+    Object.keys(matcher).forEach((key) => {
+      if (matcher[key] === null) {
+        delete matcher[key];
+      }
+    });
+    try {
+      const row = await db.get(`SELECT * FROM ${collectionId} ${whereParser(matcher)}`);
+      const outForeignKeys = await db.all(`SELECT * FROM pragma_foreign_key_list('${collectionId}')`);
+      const outboundRelation = {};
+      for (const { from, to, table } of outForeignKeys) {
+        const data = await db.all(`SELECT * FROM ${table} WHERE ${to}=${row[from]}`);
+        outboundRelation[table] = { data };
+      }
+      const tables = (await db.all("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%'"))
+        .filter(({ name }) => name !== collectionId);
+      const inboundRelation = {};
+      for (const { name } of tables) {
+        const foreignKeys = await db.all(`SELECT * FROM pragma_foreign_key_list('${name}')`);
+        for (const foreignKey of foreignKeys) {
+          if (foreignKey.table !== collectionId) { continue; }
+          const data = await db.all(`SELECT * FROM ${name} WHERE ${foreignKey.from}=${row[foreignKey.to]}`);
+          inboundRelation[name] = { data: (inboundRelation[name]?.data ?? []).concat(data) };
+        }
+      }
+      response(res, { in: inboundRelation, out: outboundRelation });
     } catch (error) {
       res.statusCode = 400;
       res.send(JSON.stringify({ error: error.message }));

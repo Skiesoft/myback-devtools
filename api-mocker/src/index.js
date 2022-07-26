@@ -30,6 +30,8 @@ async function fakeServer(req, res) {
       }
     case ((/^resource\/[^/]+\/collection\/[^/]+\/object\/query$/).test(path) && method === 'GET'):
       return Controller.queryObject(req, res);
+    case ((/^resource\/[^/]+\/collection\/[^/]+\/object\/relation$/).test(path) && method === 'GET'):
+      return Controller.getRelation(req, res);
     default:
       res.statusCode = 400;
       return res.send();
