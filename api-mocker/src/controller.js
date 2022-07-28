@@ -64,8 +64,8 @@ function whereParser(elements) {
   };
   const whereArray = [];
   Object.entries(elements).forEach(([key, val]) => {
-    if (Array.isArray(val)) {
-      val.forEach((v, k) => {
+    if (typeof val !== 'string') {
+      Object.entries(val).forEach(([k, v]) => {
         whereArray.push(`${key}${ref[k]}'${v}'`);
       });
     } else {
