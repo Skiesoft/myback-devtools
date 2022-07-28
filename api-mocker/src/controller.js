@@ -281,4 +281,17 @@ export default {
       res.send(JSON.stringify({ error: error.message }));
     }
   },
+  /**
+   * Get count of object that fulfill given matcher
+   *
+   * @param {IncomingRequest} req
+   * @param {ServerResponse} res
+   */
+  getCount: async (req, res) => {
+    const { url: reqUrl, collectionId } = parseReq(req);
+    const db = await getDB(req);
+    const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
+    const count = (await db.get(`SELECT COUNT(*) FROM ${collectionId} ${whereParser(matcher)}`))['COUNT(*)'];
+    res.send(JSON.stringify({ data: count }));
+  },
 };
