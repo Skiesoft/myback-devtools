@@ -34,6 +34,8 @@ async function fakeServer(req, res) {
       return Controller.getRelation(req, res);
     case ((/^resource\/[^/]+\/collection\/[^/]+\/object\/count$/).test(path) && method === 'GET'):
       return Controller.getCount(req, res);
+    case ((/^resource\/[^/]+\/collection\/[^/]+\/schema$/).test(path) && method === 'GET'):
+      return Controller.getSchema(req, res);
     default:
       res.statusCode = 400;
       return res.send();

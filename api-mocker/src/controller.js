@@ -239,8 +239,8 @@ export default {
   /**
    * Get related objects of an object.
    *
-   * @param {IncomingRequest} req 
-   * @param {ServerResponse} res 
+   * @param {IncomingRequest} req
+   * @param {ServerResponse} res
    */
   getRelation: async (req, res) => {
     const { url: reqUrl, collectionId } = parseReq(req);
@@ -293,5 +293,71 @@ export default {
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     const count = (await db.get(`SELECT COUNT(*) FROM ${collectionId} ${whereParser(matcher)}`))['COUNT(*)'];
     res.send(JSON.stringify({ data: count }));
+  },
+
+  /**
+   * Get collection schema
+   *
+   * @param {IncomingRequest} req
+   * @param {ServerResponse} res
+   */
+  getSchema: async (req, res) => {
+    const typeMapper = (type) => {
+      const mapper = {
+        INT: 'integer',
+        INTEGER: 'integer',
+        TINYINT: 'integer',
+        SMALLINT: 'integer',
+        MEDIUMINT: 'integer',
+        BIGINT: 'integer',
+        'UNSIGNED BIG INT': 'integer',
+        INT2: 'integer',
+        INT8: 'integer',
+        CHARACTER: 'text',
+        VARCHAR: 'text',
+        'VARYING CHARACTER': 'text',
+        NCHAR: 'text',
+        'NATIVE CHARACTER': 'text',
+        NVARCHAR: 'text',
+        TEXT: 'text',
+        CLOB: 'text',
+        BLOB: 'blob',
+        REAL: 'float',
+        DOUBLE: 'float',
+        'DOUBLE PRECISION': 'float',
+        FLOAT: 'float',
+        BOOLEAN: 'decimal',
+        DATE: 'decimal',
+        DATETIME: 'decimal',
+        NUMERIC: 'decimal',
+        DECIMAL: 'decimal',
+      };
+      if (mapper[type] !== undefined) { return mapper[type]; }
+      const textRegex = [
+        /CHARACTER([0-9]+)/,
+        /VARCHAR([0-9]+)/,
+        /VARYING CHARACTER([0-9]+)/,
+        /NCHAR([0-9]+)/,
+        /NATIVE CHARACTER([0-9]+)/,
+        /NVARCHAR([0-9]+)/,
+      ];
+      textRegex.forEach((e) => {
+        if (e.test(type)) { return 'text'; }
+      });
+      if (/DECIMAL([0-9]+,[0-9]+)/.test(type)) { return 'decimal'; }
+      res.statusCode = 400;
+      res.send(JSON.stringify({ error: 'Type error' }));
+      throw new Error('Type error');
+    };
+    const { collectionId } = parseReq(req);
+    const db = await getDB(req);
+    try {
+      const result = await db.all(`PRAGMA table_info(${collectionId});`);
+      res.send(JSON.stringify({
+        data: Object.fromEntries(result.map(({ name, type }) => ([name, typeMapper(type.toUpperCase())]))),
+      }));
+    } catch (error) {
+      console.log(error);
+    }
   },
 };

@@ -76,4 +76,13 @@ export default class CollectionModel extends SDKInterface {
     const res = await this.request(SDKInterface.HTTP_GET, uri);
     return res.data.data;
   }
+
+  async getSchema() {
+    const { resourceId, collectionId } = this;
+    let uri = `resource/${resourceId}`;
+    uri += `/collection/${collectionId}`;
+    uri += '/schema';
+    const res = await this.request(SDKInterface.HTTP_GET, uri);
+    return res.data.data;
+  }
 }
