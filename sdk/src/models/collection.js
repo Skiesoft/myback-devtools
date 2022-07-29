@@ -63,7 +63,7 @@ export default class CollectionModel extends SDKInterface {
     const { resourceId, collectionId } = this;
     let uri = `resource/${resourceId}`;
     uri += `/collection/${collectionId}`;
-    uri += `/object?pageSize=${limit}&page=${pageId}&matcher=${querybuilder.toString()}`;
+    uri += `/object/query?pageSize=${limit}&page=${pageId}&matcher=${querybuilder.toString()}`;
     const res = await this.request(SDKInterface.HTTP_GET, uri);
     return res.data.data.map((properties) => new ObjectModel(resourceId, collectionId, properties));
   }
