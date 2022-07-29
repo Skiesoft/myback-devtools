@@ -64,7 +64,7 @@ function whereParser(elements) {
   };
   const whereArray = [];
   Object.entries(elements).forEach(([key, val]) => {
-    if (typeof val !== 'string') {
+    if (typeof val === 'object') {
       Object.entries(val).forEach(([k, v]) => {
         whereArray.push(`${key}${ref[k]}'${v}'`);
       });
@@ -257,6 +257,7 @@ export default {
       }
     });
     try {
+      console.log(collectionId, whereParser(matcher));
       const row = await db.get(`SELECT * FROM ${collectionId} ${whereParser(matcher)}`);
       const outForeignKeys = await db.all(`SELECT * FROM pragma_foreign_key_list('${collectionId}')`);
       const outboundRelation = {};
