@@ -1,3 +1,6 @@
+/**
+ * Help building matcher string
+ */
 export default class QueryBuilder {
   constructor() {
     this.constraints = {};
