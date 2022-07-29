@@ -14,7 +14,7 @@ export default class QueryBuilder {
   }
 
   notEqual(k, v) {
-    this.setConstraints(k, '$neq', v);
+    this.setConstraints(k, '$ne', v);
     return this;
   }
 
