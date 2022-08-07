@@ -13,6 +13,7 @@ export default class ResourceModel extends SDKInterface {
      * @returns {CollectionModel[]}
      */
     getCollections(): CollectionModel[];
+    getCollectionByName(nameL: string): CollectionModel;
 }
 import SDKInterface from "../interface";
 import CollectionModel from "./collection";
