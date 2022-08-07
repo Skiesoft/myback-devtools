@@ -95,7 +95,7 @@ export default {
    */
   getResources: async (req, res) => {
     const directories = listDataDir('/');
-    response(res, { data: directories.map((dir, idx) => ({ id: idx + 1, name: dir })) });
+    response(res, { data: directories.map((dir, idx) => ({ id: idx + 1, name: dir.substring(0, dir.lastIndexOf('.')) })) });
   },
   /**
    * Get a list of collection (table) from designated database in the request.
