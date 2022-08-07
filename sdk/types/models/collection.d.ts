@@ -36,3 +36,4 @@ export default class CollectionModel extends SDKInterface {
 }
 import SDKInterface from "../interface";
 import ObjectModel from "./object";
+import QueryBuilder from "./query-builder";
