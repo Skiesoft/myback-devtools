@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import SDK from 'myback-sdk';
+import { SDK } from 'myback-sdk';
 
 function App() {
   const sdk = new SDK();

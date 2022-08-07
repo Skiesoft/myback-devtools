@@ -1,5 +1,6 @@
 import SDKInterface from './interface';
 import ResourceModel from './models/resource';
+import QueryBuilder from './models/query-builder';
 
 /**
  * Use for getting all available resource model.
@@ -18,4 +19,7 @@ export class SDK extends SDKInterface {
   }
 }
 
-export default SDK;
+export default {
+  SDK,
+  QueryBuilder,
+};
