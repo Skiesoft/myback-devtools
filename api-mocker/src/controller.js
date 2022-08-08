@@ -144,7 +144,7 @@ export default {
       res.statusCode = 400;
       res.send(JSON.stringify({ error: error.message }));
     }
-    const rowid = (await db.get('SELECT last_insert_rowid()'))['last_insert_rowid()'];
+    const { rowid } = await db.get('SELECT last_insert_rowid() AS rowid');
     const result = await db.get(`SELECT * FROM ${collectionId} WHERE rowid=${rowid}`);
     response(res, { data: result });
   },
