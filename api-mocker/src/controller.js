@@ -257,7 +257,6 @@ export default {
       }
     });
     try {
-      console.log(collectionId, whereParser(matcher));
       const row = await db.get(`SELECT * FROM ${collectionId} ${whereParser(matcher)}`);
       const outForeignKeys = await db.all(`SELECT * FROM pragma_foreign_key_list('${collectionId}')`);
       const outboundRelation = {};
