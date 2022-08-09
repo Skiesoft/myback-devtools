@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "bootstrap"
 import App from "./App.js";
 
 window.MYBACK_API_TOKEN ??= "DEVELOPMENT_API_TOKEN";
