@@ -11,8 +11,7 @@ export default class SDK extends SDKInterface {
      * @returns {ResourceModel[]}
      */
     getResources(): ResourceModel[];
-    getResourceById(id: number): ResourceModel;
-    getResourceByName(name: string): ResourceModel;
+    getResourceById(id: string): ResourceModel;
 }
 import SDKInterface from "./interface";
 import ResourceModel from "./models/resource";

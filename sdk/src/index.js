@@ -19,13 +19,7 @@ export class SDK extends SDKInterface {
   }
 
   async getResourceById(id) {
-    const resources = await this.getResources();
-    if (id < 0) return undefined;
-    return resources[id];
-  }
-
-  async getResourceByName(name) {
-    return (await this.getResources()).find((ele) => ele.name === name.toString());
+    return new ResourceModel(id);
   }
 }
 
