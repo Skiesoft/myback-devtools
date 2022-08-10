@@ -38,7 +38,14 @@ function listDataDir(path = '') {
  */
 async function getDB(req) {
   const { resourceId } = parseReq(req);
-  const resource = listDataDir()[resourceId - 1];
+  let resource;
+  if (typeof resourceId === "string") {
+    resource = resourceId + ".db";
+  }
+  else {
+    resource = listDataDir()[resourceId - 1];
+  }
+
 
   const db = await open({
     filename: `./data/${resource}`,
