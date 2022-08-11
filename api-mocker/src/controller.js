@@ -40,7 +40,7 @@ async function getDB(req) {
   const { resourceId } = parseReq(req);
   let resource;
   if (typeof resourceId === "string") {
-    resource = resourceId + ".db";
+    resource = resourceId + '.db';
   }
   else {
     resource = listDataDir()[resourceId - 1];
@@ -102,7 +102,7 @@ export default {
    */
   getResources: async (req, res) => {
     const directories = listDataDir('/');
-    response(res, { data: directories.map((dir, idx) => ({ id: idx + 1, name: dir.substring(0, dir.lastIndexOf('.')) })) });
+    response(res, { mapped: { data: directories.map((dir) => ({ id: dir.substring(0, dir.lastIndexOf('.')) })) }, original: { data: directories.sort().map((dir, idx) => ({ id: idx + 1 })) } });
   },
   /**
    * Get a list of collection (table) from designated database in the request.
