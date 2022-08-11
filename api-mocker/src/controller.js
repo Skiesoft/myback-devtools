@@ -27,7 +27,7 @@ function parseReq(req) {
  * @returns {String[]}
  */
 function listDataDir(path = '') {
-  return fs.readdirSync(`./data/${path}`);
+  return fs.readdirSync(`./data/${path}`).sort();
 }
 
 /**
@@ -46,6 +46,9 @@ async function getDB(req) {
     resource = listDataDir()[resourceId - 1];
   }
 
+  if (!fs.existsSync(`./${resource}`)) {
+    return undefined;
+  }
 
   const db = await open({
     filename: `./data/${resource}`,
@@ -112,6 +115,11 @@ export default {
    */
   getCollections: async (req, res) => {
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+      return;
+    }
     const result = await db.all("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%'");
     response(res, { data: result.map((row) => ({ id: row.name })) });
   },
@@ -124,6 +132,11 @@ export default {
   getPage: async (req, res) => {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+      return;
+    }
     const page = reqUrl.searchParams.get('page') ?? 0;
     const pageSize = reqUrl.searchParams.get('pageSize') ?? 24;
     const result = await db.all(`SELECT * FROM ${collectionId} LIMIT ${pageSize} OFFSET ${page * pageSize}`);
@@ -138,6 +151,10 @@ export default {
   createObject: async (req, res) => {
     const { collectionId } = parseReq(req);
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+    }
     if (!req.body) {
       res.statusCode = 400;
       response(res, { data: { error: 'Missing Body' } });
@@ -164,6 +181,11 @@ export default {
   queryObject: async (req, res) => {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+      return;
+    }
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     const page = reqUrl.searchParams.get('page') ?? 0;
     const pageSize = reqUrl.searchParams.get('pageSize') ?? 24;
@@ -189,6 +211,11 @@ export default {
   updateObject: async (req, res) => {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+      return;
+    }
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     if (!req.body.data) {
       res.statusCode = 400;
@@ -225,6 +252,11 @@ export default {
   deleteObject: async (req, res) => {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+      return;
+    }
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     if (matcher === null) {
       res.statusCode = 400;
@@ -252,6 +284,11 @@ export default {
   getRelation: async (req, res) => {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+      return;
+    }
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     if (matcher === null) {
       res.statusCode = 400;
@@ -297,6 +334,11 @@ export default {
   getCount: async (req, res) => {
     const { url: reqUrl, collectionId } = parseReq(req);
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+      return;
+    }
     const matcher = JSON.parse(reqUrl.searchParams.get('matcher'));
     const count = (await db.get(`SELECT COUNT(*) FROM ${collectionId} ${whereParser(matcher)}`))['COUNT(*)'];
     res.send(JSON.stringify({ data: count }));
@@ -358,6 +400,11 @@ export default {
     };
     const { collectionId } = parseReq(req);
     const db = await getDB(req);
+    if (db === undefined) {
+      res.statusCode = 400;
+      response(res, { data: { error: 'Database not found' } });
+      return;
+    }
     try {
       const result = await db.all(`PRAGMA table_info(${collectionId});`);
       res.send(JSON.stringify({
