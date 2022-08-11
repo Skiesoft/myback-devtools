@@ -39,14 +39,13 @@ function listDataDir(path = '') {
 async function getDB(req) {
   const { resourceId } = parseReq(req);
   let resource;
-  if (typeof resourceId === "string") {
-    resource = resourceId + '.db';
-  }
-  else {
+  if (isNaN(resourceId)) {
+    resource = `${resourceId}.db`;
+  } else {
     resource = listDataDir()[resourceId - 1];
   }
 
-  if (!fs.existsSync(`./${resource}`)) {
+  if (!fs.existsSync(`./data/${resource}`)) {
     return undefined;
   }
 
