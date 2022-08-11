@@ -4,9 +4,11 @@ import MockResponse from './mock-response';
 test('get resources', async () => {
   const res = new MockResponse();
   await Controller.getResources({}, res);
-  const resources = res.get().data;
-  expect(resources.length).toBe(1);
-  expect(resources[0].name).toBe('example.db');
+  const mappedResource = res.get().mapped.data;
+  const originalResource = res.get().original.data;
+  expect(mappedResource.length).toBe(1);
+  expect(originalResource.length).toBe(1);
+  expect(mappedResource[0].id).toBe('example');
 });
 
 test('get collections', async () => {

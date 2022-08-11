@@ -14,9 +14,11 @@ test('server routing - resource index', async () => {
     url: 'resource/',
     method: 'GET',
   }, res);
-  const resources = res.get().data;
-  expect(resources.length).toBe(1);
-  expect(resources[0].name).toBe('example.db');
+  const mappedResource = res.get().mapped.data;
+  const originalResource = res.get().original.data;
+  expect(mappedResource.length).toBe(1);
+  expect(originalResource.length).toBe(1);
+  expect(mappedResource[0].id).toBe('example');
 });
 
 test('server routing - collection index', async () => {
