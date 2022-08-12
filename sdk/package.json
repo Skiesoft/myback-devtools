@@ -1,6 +1,6 @@
 {
   "name": "@feline-studio/myback-sdk",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Software Development Kit for Myback module.",
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
