@@ -1,6 +1,6 @@
 {
   "name": "@feline-studio/myback-sdk",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Software Development Kit for Myback module.",
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
@@ -12,9 +12,9 @@
   "jest": {
     "globals": {
       "window": {
-         "MYBACK_API_TOKEN": "DEVELOPMENT_API_TOKEN",
-         "MYBACK_API_ENDPOINT": "http://localhost:8080/api"
-       }
+        "MYBACK_API_TOKEN": "DEVELOPMENT_API_TOKEN",
+        "MYBACK_API_ENDPOINT": "http://localhost:8080/api"
+      }
     }
   },
   "repository": {
