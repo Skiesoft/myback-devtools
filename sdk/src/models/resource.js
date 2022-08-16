@@ -28,7 +28,7 @@ export default class ResourceModel extends SDKInterface {
     return res.data.data.map(({ id }) => new CollectionModel(resourceId, id));
   }
 
-  async getCollectionById(id) {
+  getCollectionById(id) {
     return new CollectionModel(this.resourceId, id);
   }
 }

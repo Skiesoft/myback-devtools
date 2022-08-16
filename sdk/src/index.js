@@ -44,7 +44,7 @@ export class SDK extends SDKInterface {
    * @param {string} id Id of the resource
    * @returns {ResourceModel}
    */
-  async getResourceById(id) {
+  getResourceById(id) {
     return new ResourceModel(id);
   }
 }
