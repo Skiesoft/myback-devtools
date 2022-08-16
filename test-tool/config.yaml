@@ -16,5 +16,5 @@ Module Configuration: # List the configuration fields.
 Module UserSpace Configuration: # List the individual user confiugration fields.
   - sex :
       enum: # Use enum for checkboxes.
-        'male'
-        'female'
+        - 'male'
+        - 'female'

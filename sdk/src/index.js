@@ -15,17 +15,37 @@ export class SDK extends SDKInterface {
    */
   async getResources() {
     const res = await this.request(SDKInterface.HTTP_GET, 'resource/');
-    return res.data.data.map(({ id }) => new ResourceModel(id));
+    return res.data.mapped.data.concat(res.data.original.data).map(({ id }) => new ResourceModel(id));
   }
 
-  async getResourceById(id) {
-    const resources = await this.getResources();
-    if (id < 0) return undefined;
-    return resources[id];
+  /**
+   * Return the array of original resource models.
+   *
+   * @returns {ResourceModel[]}
+   */
+  async getOriginalResources() {
+    const res = await this.request(SDKInterface.HTTP_GET, 'resource/');
+    return res.data.original.data.map(({ id }) => new ResourceModel(id));
   }
 
-  async getResourceByName(name) {
-    return (await this.getResources()).find((ele) => ele.name === name.toString());
+  /**
+   * Return the array of mapped resource models.
+   *
+   * @returns {ResourceModel[]}
+   */
+  async getMappedResources() {
+    const res = await this.request(SDKInterface.HTTP_GET, 'resource/');
+    return res.data.mapped.data.map(({ id }) => new ResourceModel(id));
+  }
+
+  /**
+   * Return reousrce model with given name.
+   *
+   * @param {string} id Id of the resource
+   * @returns {ResourceModel}
+   */
+  getResourceById(id) {
+    return new ResourceModel(id);
   }
 }
 

@@ -1,26 +1,52 @@
 import axios from 'axios';
-import SDK from '../src/index';
+import { SDK } from '../src/index';
 
 jest.mock('axios');
 
-test('list sdk resources', async () => {
+test('list sdk original resources', async () => {
   const sdk = new SDK();
   const sampleResources = {
-    data: [
-      {
-        id: 1,
-        name: 'Resource 1',
-      },
-      {
-        id: 2,
-        name: 'Resource 2',
-      },
-    ],
+    original: {
+      data: [
+        {
+          id: '1',
+        },
+      ],
+    },
+    mapped: {
+      data: [
+        {
+          id: 'test resource',
+        },
+      ],
+    },
   };
   const resp = { data: sampleResources };
   axios.get.mockResolvedValue(resp);
-  const resources = await sdk.getResources();
-  for (let i = 0; i < 2; i += 1) {
-    expect(resources[i].resourceId).toEqual(sampleResources.data[i].id);
-  }
+  const resources = await sdk.getOriginalResources();
+  expect(resources[0].resourceId).toEqual(sampleResources.original.data[0].id);
+});
+
+test('list sdk mapped resources', async () => {
+  const sdk = new SDK();
+  const sampleResources = {
+    original: {
+      data: [
+        {
+          id: '1',
+        },
+      ],
+    },
+    mapped: {
+      data: [
+        {
+          id: 'test resource',
+        },
+      ],
+    },
+  };
+  const resp = { data: sampleResources };
+  axios.get.mockResolvedValue(resp);
+  const resources = await sdk.getMappedResources();
+  expect(resources[0].resourceId).toEqual(sampleResources.mapped.data[0].id);
 });
