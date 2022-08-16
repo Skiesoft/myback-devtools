@@ -41,6 +41,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "bootstrap": "^5.2.0",
     "css-loader": "^6.7.1",
     "myback-sdk": "file:../sdk",
     "react": "^18.1.0",
