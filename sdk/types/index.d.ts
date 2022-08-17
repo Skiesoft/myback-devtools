@@ -1,4 +1,9 @@
-export default class SDK extends SDKInterface {
+export { SDK, QueryBuilder };
+import QueryBuilder from "./models/query-builder";
+import SDKInterface from "./interface";
+import ResourceModel from "./models/resource";
+
+declare class SDK extends SDKInterface {
     /**
      * Constructor of the controller of resource.
      *
@@ -15,5 +20,5 @@ export default class SDK extends SDKInterface {
     getMappedResources(): ResourceModel[];
     getResourceById(id: string): ResourceModel;
 }
-import SDKInterface from "./interface";
-import ResourceModel from "./models/resource";
+
+
