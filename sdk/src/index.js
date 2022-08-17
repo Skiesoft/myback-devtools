@@ -7,7 +7,7 @@ import QueryBuilder from './models/query-builder';
  *
  * @extends SDKInterface
  */
-export class SDK extends SDKInterface {
+class SDK extends SDKInterface {
   /**
    * Return the array of resource models.
    *
@@ -49,7 +49,7 @@ export class SDK extends SDKInterface {
   }
 }
 
-export default {
+export {
   SDK,
   QueryBuilder,
 };
