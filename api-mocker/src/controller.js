@@ -67,13 +67,16 @@ function whereParser(elements) {
     $gt: '>',
     $gte: '<=',
     $ne: '!=',
-    $regex: ' REGEXP ',
   };
   const whereArray = [];
   Object.entries(elements).forEach(([key, val]) => {
     if (typeof val === 'object') {
       Object.entries(val).forEach(([k, v]) => {
-        whereArray.push(`${key}${ref[k]}'${v}'`);
+        if (k === '$like') {
+          whereArray.push(`${key} LIKE '%${v}%'`);
+        } else {
+          whereArray.push(`${key}${ref[k]}'${v}'`);
+        }
       });
     } else {
       whereArray.push(`${key}='${val}'`);
