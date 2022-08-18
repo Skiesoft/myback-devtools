@@ -69,19 +69,22 @@ function whereParser(elements) {
     $ne: '!=',
   };
   const whereArray = [];
+  // key is field name, val may be a string as full match or a object to do advance match
   Object.entries(elements).forEach(([key, val]) => {
-    if (typeof val === 'object') {
+    if (typeof val === 'object') { // advance match
+      // k is advance matcher key, v is match value
       Object.entries(val).forEach(([k, v]) => {
-        if (k === '$like') {
+        if (k === '$like') { // $text query looks a little different then other querys
           whereArray.push(`${key} LIKE '%${v}%'`);
         } else {
           whereArray.push(`${key}${ref[k]}'${v}'`);
         }
       });
-    } else {
+    } else { // full match
       whereArray.push(`${key}='${val}'`);
     }
   });
+  // join all condition statements with AND
   const sqlStatement = `WHERE ${whereArray.join(' AND ')}`;
   return sqlStatement;
 }
