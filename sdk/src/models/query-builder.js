@@ -16,6 +16,12 @@ export default class QueryBuilder {
     this.constraints[k][c] = v;
   }
 
+  or( ...v){
+    if (! Array.isArray(this.constraints['$or'])) this.constraints['$or'] = [];
+    for (let i=0; i<v.length; i++) this.constraints['$or'].push(v[i].constraints);
+    return this;
+  }
+
   notEqual(k, v) {
     this.setConstraints(k, '$ne', v);
     return this;
