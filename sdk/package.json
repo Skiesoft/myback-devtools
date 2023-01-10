@@ -1,21 +1,26 @@
 {
   "name": "@feline-studio/myback-sdk",
-  "version": "0.2.6",
-  "description": "Software Development Kit for Myback module.",
-  "main": "./dist/index.js",
-  "types": "./types/index.d.ts",
+  "version": "1.0.0",
+  "description": "Software Development Kit for myback module.",
+  "homepage": "https://developer.myback.app",
+  "main": "src/index.ts",
   "scripts": {
-    "build": "babel src -d dist",
-    "watch": "babel -w src -d dist",
     "test": "jest --collect-coverage"
   },
-  "jest": {
-    "globals": {
-      "window": {
-        "MYBACK_API_TOKEN": "DEVELOPMENT_API_TOKEN",
-        "MYBACK_API_ENDPOINT": "http://localhost:8080/api"
-      }
-    }
+  "dependencies": {
+    "axios": "^1.2.2"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "eslint": "^8.31.0",
+    "eslint-config-standard-with-typescript": "^26.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.3.1",
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.9.4"
   },
   "repository": {
     "type": "git",
@@ -26,30 +31,6 @@
     "sdk",
     "module"
   ],
-  "author": "Feline Studio",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Feline-Studio/myback-devtools/issues"
-  },
-  "homepage": "https://github.com/Feline-Studio/myback-devtools#readme",
-  "devDependencies": {
-    "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.17.12",
-    "@babel/plugin-transform-runtime": "^7.17.12",
-    "@babel/preset-env": "^7.17.12",
-    "babel-jest": "^28.1.0",
-    "eslint": "^8.16.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.2.2",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-react": "^7.30.0",
-    "eslint-plugin-react-hooks": "^4.5.0",
-    "jest": "^28.1.0",
-    "typescript": "^4.6.4"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.17.9",
-    "axios": "^0.25.0"
-  }
+  "author": "Feline Studio, Co. Ltd.",
+  "license": "ISC"
 }
