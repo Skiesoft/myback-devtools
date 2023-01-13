@@ -1,4 +1,4 @@
-name: Test API Mocker
+name: Test API Tester
 
 on: push
 
@@ -9,11 +9,11 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./api-mocker
+        working-directory: ./api-tester
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [14.x, 16.x, 18.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: api-mocker/package-lock.json
+        cache-dependency-path: api-tester/package-lock.json
     - name: Install dependencies.
       run: npm ci
     - name: Build NPM package.
