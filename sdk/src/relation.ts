@@ -1,4 +1,4 @@
-import { Entity } from './entity'
+import { Model } from './model'
 
 interface RelationType {
   in: any
@@ -23,7 +23,7 @@ export class Relation {
    * @param T the related entity model to retrieve.
    * @returns
    */
-  getInbound (T: typeof Entity): any[] {
+  getInbound (T: typeof Model): any[] {
     return this.relations.in[T.name].map((data: any) => new T(data))
   }
 
@@ -33,7 +33,7 @@ export class Relation {
    * @param T the related entity model to retrieve.
    * @returns
    */
-  getOutbound (T: typeof Entity): any[] {
+  getOutbound (T: typeof Model): any[] {
     return this.relations.out[T.name].map((data: any) => new T(data))
   }
 }

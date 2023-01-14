@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import { HTTP_METHOD, SDK } from './sdk'
-import { Entity } from './entity'
+import { Model } from './model'
 import { QueryBuilder } from './query-builder'
 import { Relation } from './relation'
 
@@ -26,8 +26,8 @@ export class Database {
    * @param CustomEntity the entity model.
    * @param entity the entity object to save.
    */
-  async save<T extends Entity>(CustomEntity: typeof Entity, entity: T): Promise<void> {
-    await this.request(CustomEntity, HTTP_METHOD.PUT, `object?matcher=${JSON.stringify(entity.getOldProperties())}`, { data: entity.getProperties() })
+  async save<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<void> {
+    await this.request(CustomEntity, HTTP_METHOD.PUT, `?matcher=${JSON.stringify(entity.getOldProperties())}`, { data: entity.getProperties() })
     entity.updateOldProperties()
   }
 
@@ -37,8 +37,8 @@ export class Database {
    * @param CustomEntity the entity model.
    * @param entity the entity object to destroy.
    */
-  async destroy<T extends Entity>(CustomEntity: typeof Entity, entity: T): Promise<void> {
-    await this.request(CustomEntity, HTTP_METHOD.DELETE, `object?matcher=${JSON.stringify(entity.getOldProperties())}`)
+  async destroy<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<void> {
+    await this.request(CustomEntity, HTTP_METHOD.DELETE, `?matcher=${JSON.stringify(entity.getOldProperties())}`)
   }
 
   /**
@@ -48,7 +48,7 @@ export class Database {
    * @param entity the entity object to fetch relationships.
    * @returns
    */
-  async relation<T extends Entity>(CustomEntity: typeof Entity, entity: T): Promise<Relation> {
+  async relation<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<Relation> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `relation?matcher=${JSON.stringify(entity.getOldProperties())}`)
     return new Relation(res.data)
   }
@@ -60,8 +60,8 @@ export class Database {
    * @param CustomEntity the entity model to fetch all rows.
    * @returns
    */
-  async all<T extends Entity>(CustomEntity: typeof Entity): Promise<T[]> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, 'object/')
+  async all<T extends Model>(CustomEntity: typeof Model): Promise<T[]> {
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, '')
     return res.data.data.map((properties: any) => new CustomEntity(properties))
   }
 
@@ -71,8 +71,8 @@ export class Database {
    * @param CustomEntity the entity model to fetch data.
    * @returns
    */
-  async page<T extends Entity>(CustomEntity: typeof Entity, pageId: number, limit: number = 24): Promise<T[]> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `object/page?pageSize=${limit}&page=${pageId}`)
+  async page<T extends Model>(CustomEntity: typeof Model, pageId: number, limit: number = 24): Promise<T[]> {
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}`)
     return res.data.data.map((properties: any) => new CustomEntity(properties))
   }
 
@@ -85,7 +85,7 @@ export class Database {
    * @param limit the maxmium limit of each page.
    * @returns
    */
-  async find<T extends Entity>(CustomEntity: typeof Entity, query: QueryBuilder, pageId: number = 0, limit: number = 24): Promise<T[]> {
+  async find<T extends Model>(CustomEntity: typeof Model, query: QueryBuilder, pageId: number = 0, limit: number = 24): Promise<T[]> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${query.toString()}`)
     return res.data.data.map((properties: any) => new CustomEntity(properties))
   }
@@ -97,8 +97,8 @@ export class Database {
    * @param query the constraint to filter number.
    * @returns
    */
-  async count (CustomEntity: typeof Entity, query: QueryBuilder): Promise<Number> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `/count?matcher=${query.toString()}`)
+  async count (CustomEntity: typeof Model, query: QueryBuilder): Promise<Number> {
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `count?matcher=${query.toString()}`)
     return Number(res.data.data)
   }
 
@@ -111,7 +111,7 @@ export class Database {
    * @param requestBody optional payload.
    * @returns
    */
-  private async request (T: typeof Entity, method: HTTP_METHOD, path: string, requestBody = {}): Promise<AxiosResponse> {
-    return await SDK.request(method, `database/${this.id}/CustomEntity/${T._tableName}/${path}`, requestBody)
+  private async request (T: typeof Model, method: HTTP_METHOD, path: string, requestBody = {}): Promise<AxiosResponse> {
+    return await SDK.request(method, `database/${this.id}/model/${T.getTableName()}/${path}`, requestBody)
   }
 }

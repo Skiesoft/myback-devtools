@@ -1,14 +1,24 @@
-import { Entity } from './entity'
+import 'reflect-metadata'
+import { Model } from './model'
+
+export interface AttributeProperty {
+  primary?: boolean
+  nullable?: boolean
+}
 
 /**
  * Property decorator to define an attribute in entity model.
  *
- * @param target the entity model that extend {@link Entity} class.
+ * @param target the entity model that extend {@link Model} class.
  * @param propertyName the attribute name in the entity a
  */
-export function attribute (target: any, propertyName: string): void {
-  if (target.attributes === undefined) {
-    target.attributes = []
+export function attribute (properties: AttributeProperty = {}) {
+  return (target: Model, propertyKey: string) => {
+    const attributeKey = 'attributes'
+    const attributes: string[] = Reflect.getMetadata(attributeKey, target) ?? []
+    attributes.push(propertyKey)
+
+    Reflect.defineMetadata(attributeKey, attributes, target)
+    Reflect.defineMetadata('property', properties, target, propertyKey)
   }
-  target.attributes.push(propertyName)
 }
