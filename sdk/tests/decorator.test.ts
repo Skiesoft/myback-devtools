@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { Model, attribute } from '../src'
+import { Database, Model, attribute } from '../src'
 
 test('define model with decorators', () => {
   class Sample extends Model {
