@@ -1,3 +1,6 @@
+# Package build output
+*/build/
+
 # VS Code
 .vscode
 # Logs

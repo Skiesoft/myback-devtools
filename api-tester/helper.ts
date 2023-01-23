@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3'
 
-export const db = new Database('./data/default.db')
+export const db: Database.Database = new Database('./data/default.db')
 
 /**
  * Translate a mongodb like query object into SQL statement.

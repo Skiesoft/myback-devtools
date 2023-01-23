@@ -1,14 +1,35 @@
 import express from 'express'
+import http from 'http'
 import indexRouter from './routes/index'
 
-export const app = express()
+interface APIInstance {
+  app: express.Express
+  server: http.Server
+}
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+function start (): APIInstance {
+  const app = express()
 
-app.use('/v1/', indexRouter)
+  app.use(express.json())
+  app.use(express.urlencoded({ extended: false }))
 
-const port = parseInt(process.env.PORT ?? '3000', 10)
-export const server = app.listen(port, () => {
-  console.log(`API Tester started on ${port}`)
-})
+  app.use('/v1/', indexRouter)
+
+  const port = parseInt(process.env.PORT ?? '3000', 10)
+  const server = app.listen(port, () => {
+    console.log(`API Tester started on ${port}`)
+  })
+
+  return {
+    app,
+    server
+  }
+}
+
+if (require.main === module) {
+  start()
+}
+
+export default {
+  start
+}

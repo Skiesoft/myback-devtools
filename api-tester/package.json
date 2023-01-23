@@ -1,9 +1,13 @@
 {
   "name": "@myback/api-tester",
   "description": "Fake API server for MyBack module development.",
-  "version": "0.0.0",
+  "author": "Feline Studio, Co. Ltd.",
+  "main": "build/app.js",
+  "types": "build/app.d.ts",
+  "version": "0.0.1",
   "scripts": {
     "start": "ts-node app.ts",
+    "build": "tsc",
     "test": "jest --runInBand --collect-coverage"
   },
   "dependencies": {

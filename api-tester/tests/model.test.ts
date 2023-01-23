@@ -1,5 +1,7 @@
 import request from 'supertest'
-import { app, server } from '../app'
+import App from '../app'
+
+const { app, server } = App.start()
 
 describe('GET /v1/database/default/model', (): void => {
   it('responds with json', (done) => {
