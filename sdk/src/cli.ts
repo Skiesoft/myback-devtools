@@ -2,6 +2,7 @@ import Database from 'better-sqlite3'
 import inquirer from 'inquirer'
 import { AttributeProperty } from './decorator'
 import { Model } from './model'
+import APITester from '@myback/api-tester'
 
 export interface ConfigType {
   name: string
@@ -51,7 +52,7 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
 }
 
 export async function launchFakeAPI (): Promise<any> {
-  const { server } = await import('@myback/api-tester/app')
+  const { server } = await APITester.start()
   return server
 }
 
@@ -63,7 +64,7 @@ if (require.main === module) {
       choices: ['Launch fake API', 'Create test database']
     }
   ]).then(async (answers) => {
-    const config = (await import('module.config') as unknown) as ConfigType
+    const config: ConfigType = (await require('module.config') as unknown) as ConfigType
     if (config === undefined) {
       throw new Error('Module config undefined.')
     }
