@@ -1,6 +1,6 @@
 {
   "name": "@myback/sdk",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Software Development Kit for myback module.",
   "homepage": "https://developer.myback.app",
   "main": "build/index.js",
@@ -10,7 +10,7 @@
     "test": "jest --detectOpenHandles --collect-coverage"
   },
   "dependencies": {
-    "@myback/api-tester": "^0.0.1",
+    "@myback/api-tester": "^0.0.3",
     "app-root-path": "^3.1.0",
     "axios": "^1.2.2",
     "inquirer": "^8.0.0",

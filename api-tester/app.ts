@@ -1,6 +1,7 @@
 import express from 'express'
 import http from 'http'
 import indexRouter from './routes/index'
+import cors from 'cors'
 
 interface APIInstance {
   app: express.Express
@@ -10,6 +11,7 @@ interface APIInstance {
 function start (): APIInstance {
   const app = express()
 
+  app.use(cors())
   app.use(express.json())
   app.use(express.urlencoded({ extended: false }))
 
