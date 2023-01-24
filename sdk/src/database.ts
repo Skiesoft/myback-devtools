@@ -27,7 +27,11 @@ export class Database {
    * @param entity the entity object to save.
    */
   async save<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<void> {
-    await this.request(CustomEntity, HTTP_METHOD.PUT, `?matcher=${JSON.stringify(entity.getOldProperties())}`, { data: entity.getProperties() })
+    if (entity.getOldProperties() === null) {
+      await this.request(CustomEntity, HTTP_METHOD.POST, '', { data: entity.getProperties() })
+    } else {
+      await this.request(CustomEntity, HTTP_METHOD.PUT, `?matcher=${JSON.stringify(entity.getOldProperties())}`, { data: entity.getProperties() })
+    }
     entity.updateOldProperties()
   }
 
@@ -62,7 +66,7 @@ export class Database {
    */
   async all<T extends Model>(CustomEntity: typeof Model): Promise<T[]> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, '')
-    return res.data.data.map((properties: any) => new CustomEntity(properties))
+    return res.data.data.map((properties: any) => new CustomEntity(properties, false))
   }
 
   /**
@@ -73,7 +77,7 @@ export class Database {
    */
   async page<T extends Model>(CustomEntity: typeof Model, pageId: number, limit: number = 24): Promise<T[]> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}`)
-    return res.data.data.map((properties: any) => new CustomEntity(properties))
+    return res.data.data.map((properties: any) => new CustomEntity(properties, false))
   }
 
   /**
@@ -87,7 +91,7 @@ export class Database {
    */
   async find<T extends Model>(CustomEntity: typeof Model, query: QueryBuilder, pageId: number = 0, limit: number = 24): Promise<T[]> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${query.toString()}`)
-    return res.data.data.map((properties: any) => new CustomEntity(properties))
+    return res.data.data.map((properties: any) => new CustomEntity(properties, false))
   }
 
   /**
