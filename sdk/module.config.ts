@@ -1,5 +1,5 @@
-export default {
-  name: 'Module placeholder',
-  description: 'Moduel config file placeholder.',
-  models: []
+module.exports = {
+    name: 'Module placeholder',
+    description: 'Moduel config file placeholder.',
+    models: [],
 }
