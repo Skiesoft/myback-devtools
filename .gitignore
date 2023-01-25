@@ -1,6 +1,9 @@
 # Package build output
 */build/
 
+# SQLite Database fie
+**/*.db
+
 # VS Code
 .vscode
 # Logs

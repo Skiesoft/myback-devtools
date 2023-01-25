@@ -1,5 +1,5 @@
 import request from 'supertest'
-import App from '../app'
+import App from '../src/app'
 
 const { app, server } = App.start()
 
