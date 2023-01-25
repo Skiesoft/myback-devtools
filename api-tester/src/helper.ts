@@ -11,9 +11,9 @@ export const db: Database.Database = new Database('./data/default.db')
 export function whereParser (query: any): string {
   const ref = {
     $lt: '<',
-    $lte: '<=',
+    $le: '<=',
     $gt: '>',
-    $gte: '<=',
+    $ge: '<=',
     $ne: '!='
   }
   const whereArray: string[] = []

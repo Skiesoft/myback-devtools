@@ -75,7 +75,7 @@ describe('GET /v1/database/default/model/one/query', (): void => {
         done()
       })
     request(app)
-      .get('/v1/database/default/model/one/query?matcher={"field1":{"$lte":"100"}}')
+      .get('/v1/database/default/model/one/query?matcher={"field1":{"$le":"100"}}')
       .expect(200)
       .then(response => {
         expect(response.body.data.length).toBe(24)

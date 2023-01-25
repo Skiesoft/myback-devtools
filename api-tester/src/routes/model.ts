@@ -44,14 +44,14 @@ router.put('/:model', (req, res) => {
   const { model } = req.params
   const matcher = JSON.parse(req.query.matcher as string)
   const { data } = req.body
-  const { id } = db.prepare(`SELECT rowid FROM ${model} ${whereParser(matcher)}`).get()
-  if (id == null) {
+  const id = Object.values(db.prepare(`SELECT rowid FROM ${model} ${whereParser(matcher)}`).get())[0] as (number | undefined)
+  if (id === undefined) {
     res.status(404).send({ error: 'No match' })
     return
   }
   const setter = Object.entries(data).map(([k, v]) => `${k}='${v as string}'`).join(', ')
-  db.prepare(`UPDATE ${model} SET ${setter} WHERE rowid=${id as number}`).run()
-  res.send({ data: db.prepare(`SELECT * FROM ${model} WHERE rowid=${id as number}`).get() })
+  db.prepare(`UPDATE ${model} SET ${setter} WHERE rowid=${id}`).run()
+  res.send({ data: db.prepare(`SELECT * FROM ${model} WHERE rowid=${id}`).get() })
 })
 
 router.delete('/:model', (req, res) => {
