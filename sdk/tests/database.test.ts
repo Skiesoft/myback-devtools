@@ -29,6 +29,9 @@ afterAll(() => {
 
 class Sample extends Model {
   protected static tableName: string = 'sample2'
+  @attribute({ autoIndex: true})
+    id?: number
+
   @attribute()
     name?: string
 

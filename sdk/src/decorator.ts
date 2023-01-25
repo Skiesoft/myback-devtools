@@ -1,8 +1,9 @@
 import 'reflect-metadata'
 import { Model } from './model'
 
-export interface AttributeProperty {
+interface AttributeProperty {
   primary?: boolean
+  autoIndex?: boolean
   nullable?: boolean
 }
 

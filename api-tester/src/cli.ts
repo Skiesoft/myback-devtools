@@ -10,6 +10,12 @@ export interface ConfigType {
   models?: any[]
 }
 
+interface AttributeProperty {
+  primary?: boolean
+  autoIndex?: boolean
+  nullable?: boolean
+}
+
 export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
   if (config.models === undefined) {
     throw new Error('No model in config file, can not create test database.')
@@ -39,15 +45,16 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
           break
       }
 
-      const prop: any = Reflect.getMetadata('property', model, attr)
+      const prop: AttributeProperty = Reflect.getMetadata('property', model, attr)
       let col = `${attr} ${type} `
       if (prop.primary === true) col += 'PRIMARY KEY '
+      if (prop.autoIndex === true) col += 'AUTOINCREMENT '
       if (prop.nullable !== true) col += 'NOT NULL '
       const defaultValue = (model)[attr]
       if (defaultValue !== undefined) col += `DEFAULT ${type === 'TEXT' ? `'${defaultValue as string}'` : defaultValue as number} `
       columns.push(col)
     }
-    db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName() as string} (${columns.join(',')})`)
+    db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName() as string} (${columns.join(', ')})`)
   }
 }
 
