@@ -7,7 +7,7 @@ import App from './app'
 export interface ConfigType {
   name: string
   description?: string
-  models?: Array<any>
+  models?: any[]
 }
 
 export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
@@ -43,11 +43,11 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
       let col = `${attr} ${type} `
       if (prop.primary === true) col += 'PRIMARY KEY '
       if (prop.nullable !== true) col += 'NOT NULL '
-      const defaultValue = (model as any)[attr]
+      const defaultValue = (model)[attr]
       if (defaultValue !== undefined) col += `DEFAULT ${type === 'TEXT' ? `'${defaultValue as string}'` : defaultValue as number} `
       columns.push(col)
     }
-    db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName()} (${columns.join(',')})`)
+    db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName() as string} (${columns.join(',')})`)
   }
 }
 

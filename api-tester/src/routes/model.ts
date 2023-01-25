@@ -33,17 +33,17 @@ router.post('/:model', (req, res) => {
 })
 
 router.put('/:model', (req, res) => {
-  const { matcher } = req.query
-  const { data } = req.body
   if (req.body.data === undefined) {
     res.status(400).send({ error: 'Missing Body' })
     return
   }
-  if (matcher === undefined) {
+  if (req.query.matcher === undefined) {
     res.status(400).send({ error: 'Missing Matcher' })
     return
   }
   const { model } = req.params
+  const matcher = JSON.parse(req.query.matcher as string)
+  const { data } = req.body
   const { id } = db.prepare(`SELECT rowid FROM ${model} ${whereParser(matcher)}`).get()
   if (id == null) {
     res.status(404).send({ error: 'No match' })
@@ -55,12 +55,12 @@ router.put('/:model', (req, res) => {
 })
 
 router.delete('/:model', (req, res) => {
-  const { matcher } = req.query
-  if (matcher === undefined) {
+  if (req.query.matcher === undefined) {
     res.status(400).send({ error: 'Missing Matcher' })
     return
   }
   const { model } = req.params
+  const matcher = JSON.parse(req.query.matcher as string)
   if (db.prepare(`SELECT * FROM ${model} ${whereParser(matcher)}`).get() == null) {
     res.status(404).send({ error: 'No match' })
     return
@@ -70,27 +70,27 @@ router.delete('/:model', (req, res) => {
 })
 
 router.get('/:model/query', (req, res) => {
-  const matcher = JSON.parse(req.query.matcher as string)
   const page = Number(req.query.page ?? 0)
   const pageSize = Number(req.query.pageSize ?? 24)
-  if (matcher === null) {
+  if (req.query.matcher === null) {
     res.status(400).send({ error: 'Missing Matcher' })
     return
   }
   const { model } = req.params
+  const matcher = JSON.parse(req.query.matcher as string)
   const stmt = db.prepare(`SELECT * FROM ${model} ${whereParser(matcher)} LIMIT ${pageSize} OFFSET ${page * pageSize}`)
   const result = stmt.all()
   res.send({ data: result })
 })
 
 router.get('/:model/relation', (req, res) => {
-  const { matcher } = req.query
-  if (matcher === undefined) {
+  if (req.query.matcher === undefined) {
     res.status(400).send({ error: 'Missing Matcher' })
     return
   }
 
   const { model } = req.params
+  const matcher = JSON.parse(req.query.matcher as string)
   const row = db.prepare(`SELECT * FROM ${model} ${whereParser(matcher)}`).get()
   if (row == null) {
     res.status(404).send({ error: 'No match' })
@@ -118,8 +118,8 @@ router.get('/:model/relation', (req, res) => {
 })
 
 router.get('/:model/count', (req, res) => {
-  const matcher = JSON.parse(req.query.matcher as string)
   const { model } = req.params
+  const matcher = JSON.parse(req.query.matcher as string)
   const count = (db.prepare(`SELECT COUNT(*) FROM ${model} ${whereParser(matcher)}`).get())['COUNT(*)']
   res.send({ data: count })
 })

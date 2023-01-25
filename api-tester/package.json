@@ -4,7 +4,7 @@
   "author": "Feline Studio, Co. Ltd.",
   "main": "build/app.js",
   "types": "build/app.d.ts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "scripts": {
     "start": "ts-node src/cli.ts",
     "build": "tsc",

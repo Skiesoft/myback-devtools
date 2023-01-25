@@ -1,3 +1,4 @@
+import { describe, expect, it, afterAll } from '@jest/globals'
 import request from 'supertest'
 import App from '../src/app'
 
@@ -45,8 +46,7 @@ describe('POST /v1/database/default/model/one', (): void => {
 describe('PUT /v1/database/default/model/one', (): void => {
   it('responds with json', (done) => {
     request(app)
-      .put('/v1/database/default/model/one')
-      .query({ matcher: { field1: 1, field2: 'somestr' } })
+      .put('/v1/database/default/model/one?matcher={"field1":1,"field2":"somestr"}')
       .send({ data: { field1: 100, field2: 'b' } })
       .expect(200)
       .then(response => {
@@ -60,17 +60,34 @@ describe('PUT /v1/database/default/model/one', (): void => {
 describe('DELETE /v1/database/default/model/one', (): void => {
   it('responds with json', (done) => {
     request(app)
-      .delete('/v1/database/default/model/one')
-      .query({ matcher: { field1: 100, field2: 'b' } })
+      .delete('/v1/database/default/model/one?matcher={"field1":100,"field2":"b"}')
       .expect(200, done)
+  })
+})
+
+describe('GET /v1/database/default/model/one/query', (): void => {
+  it('responds with json', (done) => {
+    request(app)
+      .get('/v1/database/default/model/one/query?matcher={"field1":{"$gt":"100"}}')
+      .expect(200)
+      .then(response => {
+        expect(response.body.data.length).toBe(0)
+        done()
+      })
+    request(app)
+      .get('/v1/database/default/model/one/query?matcher={"field1":{"$lte":"100"}}')
+      .expect(200)
+      .then(response => {
+        expect(response.body.data.length).toBe(24)
+        done()
+      })
   })
 })
 
 describe('GET /v1/database/default/model/three/relation', (): void => {
   it('responds with json', (done) => {
     request(app)
-      .get('/v1/database/default/model/three/relation')
-      .query({ matcher: { ref1: 2, ref2: 1 } })
+      .get('/v1/database/default/model/three/relation?matcher={"ref1":2,"ref2":1}')
       .expect(200)
       .then(response => {
         expect(response.body.out.one.data[0].id).toBe(2)

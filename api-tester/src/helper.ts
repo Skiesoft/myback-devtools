@@ -20,9 +20,9 @@ export function whereParser (query: any): string {
   // key is field name, val may be a string as full match or a object to do advance match
   Object.keys(query).forEach((key: string) => {
     const val: (string | any) = query[key]
-    if (typeof val === 'string') {
+    if (typeof val !== 'object') {
       // full match
-      whereArray.push(`${key}='${val}'`)
+      whereArray.push(`${key}='${val as string}'`)
     } else {
       // advance match
       // k is advance matcher key, v is match value
