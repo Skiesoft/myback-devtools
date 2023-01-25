@@ -24,7 +24,7 @@ export class Relation {
    * @returns
    */
   getInbound (T: typeof Model): any[] {
-    return this.relations.in[T.name].map((data: any) => new T(data))
+    return this.relations.in[T.name].map((data: any) => Model.loadOldObject(T, data))
   }
 
   /**
@@ -34,6 +34,6 @@ export class Relation {
    * @returns
    */
   getOutbound (T: typeof Model): any[] {
-    return this.relations.out[T.name].map((data: any) => new T(data))
+    return this.relations.out[T.name].map((data: any) => Model.loadOldObject(T, data))
   }
 }

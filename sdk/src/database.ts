@@ -64,9 +64,9 @@ export class Database {
    * @param CustomEntity the entity model to fetch all rows.
    * @returns
    */
-  async all<T extends Model>(CustomEntity: typeof Model): Promise<T[]> {
+  async all (CustomEntity: typeof Model): Promise<any[]> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, '')
-    return res.data.data.map((properties: any) => new CustomEntity(properties, false))
+    return res.data.data.map((properties: any) => Model.loadOldObject(CustomEntity, properties))
   }
 
   /**
@@ -75,9 +75,9 @@ export class Database {
    * @param CustomEntity the entity model to fetch data.
    * @returns
    */
-  async page<T extends Model>(CustomEntity: typeof Model, pageId: number, limit: number = 24): Promise<T[]> {
+  async page (CustomEntity: typeof Model, pageId: number, limit: number = 24): Promise<any[]> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}`)
-    return res.data.data.map((properties: any) => new CustomEntity(properties, false))
+    return res.data.data.map((properties: any) => Model.loadOldObject(CustomEntity, properties))
   }
 
   /**
@@ -89,9 +89,9 @@ export class Database {
    * @param limit the maxmium limit of each page.
    * @returns
    */
-  async find<T extends Model>(CustomEntity: typeof Model, query: QueryBuilder, pageId: number = 0, limit: number = 24): Promise<T[]> {
+  async find (CustomEntity: typeof Model, query: QueryBuilder, pageId: number = 0, limit: number = 24): Promise<any[]> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${query.toString()}`)
-    return res.data.data.map((properties: any) => new CustomEntity(properties, false))
+    return res.data.data.map((properties: any) => Model.loadOldObject(CustomEntity, properties))
   }
 
   /**
@@ -101,7 +101,7 @@ export class Database {
    * @param query the constraint to filter number.
    * @returns
    */
-  async count<T extends Model>(CustomEntity: typeof Model, query: QueryBuilder): Promise<Number> {
+  async count (CustomEntity: typeof Model, query: QueryBuilder): Promise<Number> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `count?matcher=${query.toString()}`)
     return Number(res.data.data)
   }

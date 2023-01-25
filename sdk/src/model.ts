@@ -1,4 +1,4 @@
-export class Model {
+export class Model implements Record<string, any> {
   protected static tableName: string = ''
   private _oldProperties: object = {}
   private _new: boolean = true
@@ -7,12 +7,18 @@ export class Model {
     return Reflect.getMetadata('attributes', this)
   }
 
-  public constructor (props: any = {}, isNew: boolean = true) {
-    Object.assign(this, props)
-    if (!isNew) {
-      this._new = false
-      this.updateOldProperties()
-    }
+  /**
+   * Create a object and load old properties.
+   *
+   * @param CustomeEntity
+   * @param props
+   * @returns
+   */
+  public static loadOldObject (CustomeEntity: typeof Model, props: any = {}): any {
+    const obj = new CustomeEntity()
+    Object.assign(obj, props)
+    obj.updateOldProperties()
+    return obj
   }
 
   public static getTableName (): string {
