@@ -1,18 +1,16 @@
 export class Model {
   protected static tableName: string = ''
   private _oldProperties: object = {}
-  private _new: boolean
+  private _new: boolean = true
 
   private get _attributes (): string[] {
     return Reflect.getMetadata('attributes', this)
   }
 
   public constructor (props: any = {}, isNew: boolean = true) {
-    for (const attr of this._attributes) {
-      this[attr as keyof typeof this] = props[attr]
-    }
-    this._new = isNew
+    Object.assign(this, props)
     if (!isNew) {
+      this._new = false
       this.updateOldProperties()
     }
   }
@@ -31,7 +29,7 @@ export class Model {
     this._oldProperties = this.getProperties()
   }
 
-  public getProperties (): object {
+  public getProperties (): any {
     const props: any = {}
     for (const attr of this._attributes) {
       props[attr] = this[attr as keyof typeof this] ?? null
