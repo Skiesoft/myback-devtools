@@ -1,13 +1,15 @@
-import type { Item } from "./item";
-import { attribute, Model } from '@feline-studio/myback-sdk';
+import type { Item } from './item'
+import { attribute, Model } from '@myback/sdk'
 
 export class List extends Model {
-    @attribute()
-    id: number = 0;
-    
-    @attribute()
-    name: string = '';
+  protected static tableName: string = 'lists'
 
-    @attribute()
-    items: Item[] = [];
+  @attribute({ primary: true })
+    id?: number
+
+  @attribute()
+    name?: string
+
+  @attribute()
+    items?: Item[]
 }
