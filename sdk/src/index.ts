@@ -1,9 +1,9 @@
-import { Database as _Database } from './database'
+import { Database as _Database } from './api/database'
 import { SDK as _SDK, HTTP_METHOD as _HTTP_METHOD } from './sdk'
-import { Model as _Model } from './model'
-import { QueryBuilder as _QueryBuilder } from './query-builder'
-import { Relation as _Relation } from './relation'
-import { attribute as _attribute } from './decorator'
+import { Model as _Model } from './api/model'
+import { QueryBuilder as _QueryBuilder } from './api/query-builder'
+import { Relation as _Relation } from './api/relation'
+import { attribute as _attribute } from './api/decorator'
 
 export const SDK = _SDK
 export const HTTP_METHOD = _HTTP_METHOD

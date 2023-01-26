@@ -3,7 +3,7 @@ import { Model, attribute } from '../src'
 
 test('define model with decorators', () => {
   class Sample extends Model {
-    @attribute()
+    @attribute({ type: 'string' })
       name: string = ''
   }
 

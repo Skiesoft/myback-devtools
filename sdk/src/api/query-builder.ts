@@ -1,15 +1,18 @@
+type ValueType = number | string
+type ComparatorType = '$ne' | '$lt' | '$le' | '$gt' | '$ge'
+
 /**
  * Help building matcher string
  */
 export class QueryBuilder {
   private constraints: any = {}
 
-  equal (k: string, v: string): QueryBuilder {
+  equal (k: string, v: ValueType): QueryBuilder {
     this.constraints[k] = v
     return this
   }
 
-  setConstraints (k: string, c: string, v: string): void {
+  setConstraints (k: string, c: ComparatorType, v: ValueType): void {
     if (typeof this.constraints[k] !== 'object') {
       this.constraints[k] = {}
     }
@@ -22,27 +25,27 @@ export class QueryBuilder {
     return this
   }
 
-  notEqual (k: string, v: string): QueryBuilder {
+  notEqual (k: string, v: ValueType): QueryBuilder {
     this.setConstraints(k, '$ne', v)
     return this
   }
 
-  lessThan (k: string, v: string): QueryBuilder {
+  lessThan (k: string, v: ValueType): QueryBuilder {
     this.setConstraints(k, '$lt', v)
     return this
   }
 
-  lessOrEqualThan (k: string, v: string): QueryBuilder {
+  lessOrEqualThan (k: string, v: ValueType): QueryBuilder {
     this.setConstraints(k, '$le', v)
     return this
   }
 
-  greaterThan (k: string, v: string): QueryBuilder {
+  greaterThan (k: string, v: ValueType): QueryBuilder {
     this.setConstraints(k, '$gt', v)
     return this
   }
 
-  greaterOrEqualThan (k: string, v: string): QueryBuilder {
+  greaterOrEqualThan (k: string, v: ValueType): QueryBuilder {
     this.setConstraints(k, '$ge', v)
     return this
   }

@@ -20,8 +20,12 @@ router.post('/:model', (req, res) => {
     res.status(400).send({ data: { error: 'Missing Body' } })
     return
   }
+  const { data } = req.body;
+  for(const key of Object.keys(data)) {
+    if( data[key] === null ) delete data[key]
+  }
   const columns: string = Object.keys(req.body.data).join(',')
-  const values: string = Object.values<string>(req.body.data).map((v: string) => `'${v}'`).join(',')
+  const values: string = Object.values(req.body.data).map((v: number | any) => ((typeof v === 'number')? `${v}` : `'${v}'`)).join(',')
   const { model } = req.params
   let stmt = db.prepare(`INSERT INTO ${model} (${columns}) VALUES (${values})`)
   stmt.run()

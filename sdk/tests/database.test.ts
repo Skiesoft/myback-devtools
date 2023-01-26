@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, expect, test } from '@jest/globals'
 import { attribute, Database, Model, QueryBuilder, SDK } from '../src'
-import App from '@myback/api-tester'
-import { createSQLiteDatabase } from '@myback/api-tester/build/cli'
+import App from '../src/test-server'
+import { createSQLiteDatabase } from '../src/test-server/cli'
 import { Server } from 'http'
 
 SDK.init({
@@ -29,13 +29,13 @@ afterAll(() => {
 
 class Sample extends Model {
   protected static tableName: string = 'sample2'
-  @attribute({ autoIndex: true})
+  @attribute({ primary: true, autoIndex: true, type: 'int' })
     id?: number
 
-  @attribute()
+  @attribute({ type: 'string' })
     name?: string
 
-  @attribute()
+  @attribute({ type: 'int' })
     age?: number
 }
 
@@ -50,9 +50,9 @@ test('Test save object', async () => {
 })
 
 test('Test find object', async () => {
-  let query = new QueryBuilder().greaterThan('age', '50')
+  let query = new QueryBuilder().greaterThan('age', 50)
   expect((await db.find(Sample, query)).length).toBe(0)
-  query = new QueryBuilder().lessOrEqualThan('age', '50')
+  query = new QueryBuilder().lessOrEqualThan('age', 50)
   expect((await db.find(Sample, query)).length).toBe(1)
 })
 

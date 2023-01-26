@@ -2,18 +2,13 @@ import 'reflect-metadata'
 import Database from 'better-sqlite3'
 import AppRoot from 'app-root-path'
 import inquirer from 'inquirer'
-import App from './app'
+import App from './index'
+import { AttributeProperty } from 'src/api/decorator'
 
 export interface ConfigType {
   name: string
   description?: string
   models?: any[]
-}
-
-interface AttributeProperty {
-  primary?: boolean
-  autoIndex?: boolean
-  nullable?: boolean
 }
 
 export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
@@ -28,24 +23,21 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
 
     const columns: string[] = []
     for (const attr of attributes) {
-      let type = ''
-      switch (Reflect.getMetadata('design:type', model, attr)) {
-        case BigInt:
-          type = 'BIGINT'
+      const prop: AttributeProperty = Reflect.getMetadata('property', model, attr)
+      let type: string = prop.type
+      switch (type) {
+        case 'boolean':
+        case 'int': 
+          type = 'INTEGER'
           break
-        case Number:
+        case 'float':
           type = 'REAL'
           break
-        case Boolean:
-          type = 'TINYINT'
-          break
-        default:
-          // Serialize all other types to text.
+        case 'string':
           type = 'TEXT'
           break
       }
 
-      const prop: AttributeProperty = Reflect.getMetadata('property', model, attr)
       let col = `${attr} ${type} `
       if (prop.primary === true) col += 'PRIMARY KEY '
       if (prop.autoIndex === true) col += 'AUTOINCREMENT '

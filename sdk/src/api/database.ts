@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { HTTP_METHOD, SDK } from './sdk'
+import { HTTP_METHOD, SDK } from '../sdk'
 import { Model } from './model'
 import { QueryBuilder } from './query-builder'
 import { Relation } from './relation'
@@ -27,11 +27,13 @@ export class Database {
    * @param entity the entity object to save.
    */
   async save<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<void> {
+    let res: any;
     if (entity.getOldProperties() === null) {
-      await this.request(CustomEntity, HTTP_METHOD.POST, '', { data: entity.getProperties() })
+      res = await this.request(CustomEntity, HTTP_METHOD.POST, '', { data: entity.getProperties() })
     } else {
-      await this.request(CustomEntity, HTTP_METHOD.PUT, `?matcher=${JSON.stringify(entity.getOldProperties())}`, { data: entity.getProperties() })
+      res = await this.request(CustomEntity, HTTP_METHOD.PUT, `?matcher=${JSON.stringify(entity.getOldProperties())}`, { data: entity.getProperties() })
     }
+    Object.assign(entity, res.data.data)
     entity.updateOldProperties()
   }
 

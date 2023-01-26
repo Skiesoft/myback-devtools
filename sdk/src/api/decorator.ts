@@ -1,10 +1,11 @@
 import 'reflect-metadata'
 import { Model } from './model'
 
-interface AttributeProperty {
+export interface AttributeProperty {
   primary?: boolean
   autoIndex?: boolean
   nullable?: boolean
+  type: 'int' | 'float' | 'string' | 'boolean'
 }
 
 /**
@@ -13,7 +14,7 @@ interface AttributeProperty {
  * @param target the entity model that extend {@link Model} class.
  * @param propertyName the attribute name in the entity a
  */
-export function attribute (properties: AttributeProperty = {}) {
+export function attribute (properties: AttributeProperty) {
   return (target: Model, propertyKey: string) => {
     const attributeKey = 'attributes'
     const attributes: string[] = Reflect.getMetadata(attributeKey, target) ?? []
