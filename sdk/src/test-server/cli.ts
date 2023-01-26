@@ -4,6 +4,7 @@ import AppRoot from 'app-root-path'
 import inquirer from 'inquirer'
 import App from './index'
 import { AttributeProperty } from 'src/api/decorator'
+import { Model } from 'src'
 
 export interface ConfigType {
   name: string
@@ -26,8 +27,9 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
       const prop: AttributeProperty = Reflect.getMetadata('property', model, attr)
       let type: string = prop.type
       switch (type) {
+        case 'relation':
         case 'boolean':
-        case 'int': 
+        case 'int':
           type = 'INTEGER'
           break
         case 'float':
@@ -45,6 +47,11 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
       const defaultValue = (model)[attr]
       if (defaultValue !== undefined) col += `DEFAULT ${type === 'TEXT' ? `'${defaultValue as string}'` : defaultValue as number} `
       columns.push(col)
+      if (prop.type === 'relation') {
+        const Foreign: typeof Model = Reflect.getMetadata('design:type', model, attr)
+        const primaryKey: string = Reflect.getMetadata('primaryKey', new Foreign())
+        columns.push(`FOREIGN KEY(${attr}) REFERENCES ${Foreign.getTableName()}(${primaryKey})`)
+      }
     }
     db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName() as string} (${columns.join(', ')})`)
   }

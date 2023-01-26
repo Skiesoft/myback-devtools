@@ -1,5 +1,5 @@
 import express from 'express'
-import { db, whereParser } from '../helper'
+import { b, db, whereParser } from '../helper'
 
 const router = express.Router()
 
@@ -20,12 +20,8 @@ router.post('/:model', (req, res) => {
     res.status(400).send({ data: { error: 'Missing Body' } })
     return
   }
-  const { data } = req.body;
-  for(const key of Object.keys(data)) {
-    if( data[key] === null ) delete data[key]
-  }
   const columns: string = Object.keys(req.body.data).join(',')
-  const values: string = Object.values(req.body.data).map((v: number | any) => ((typeof v === 'number')? `${v}` : `'${v}'`)).join(',')
+  const values: string = Object.values<number | string>(req.body.data).map((v) => (typeof v === 'string' ? `'${v}'` : `${v}`)).join(',')
   const { model } = req.params
   let stmt = db.prepare(`INSERT INTO ${model} (${columns}) VALUES (${values})`)
   stmt.run()
@@ -48,12 +44,13 @@ router.put('/:model', (req, res) => {
   const { model } = req.params
   const matcher = JSON.parse(req.query.matcher as string)
   const { data } = req.body
-  const id = Object.values(db.prepare(`SELECT rowid FROM ${model} ${whereParser(matcher)}`).get())[0] as (number | undefined)
-  if (id === undefined) {
+  const res2: (object | undefined) = db.prepare(`SELECT rowid FROM ${model} ${whereParser(matcher)}`).get()
+  if (res2 === undefined) {
     res.status(404).send({ error: 'No match' })
     return
   }
-  const setter = Object.entries(data).map(([k, v]) => `${k}='${v as string}'`).join(', ')
+  const id = Object.values(res2)[0] as number
+  const setter = Object.entries(data).map(([k, v]) => `${k}=${b(v)}`).join(', ')
   db.prepare(`UPDATE ${model} SET ${setter} WHERE rowid=${id}`).run()
   res.send({ data: db.prepare(`SELECT * FROM ${model} WHERE rowid=${id}`).get() })
 })

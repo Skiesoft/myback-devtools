@@ -1,8 +1,10 @@
 import { afterAll, beforeAll, expect, test } from '@jest/globals'
-import { attribute, Database, Model, QueryBuilder, SDK } from '../src'
+import { Database, QueryBuilder, SDK } from '../src'
 import App from '../src/test-server'
 import { createSQLiteDatabase } from '../src/test-server/cli'
 import { Server } from 'http'
+import { Sample1 } from './models/sample1'
+import { Sample2 } from './models/sample2'
 
 SDK.init({
   API_KEY: 'NOT_REQUIRE_FOR_TESTER',
@@ -17,7 +19,7 @@ beforeAll(async () => {
   await createSQLiteDatabase({
     name: 'test',
     description: 'testing',
-    models: [Sample]
+    models: [Sample1, Sample2]
   })
 
   server = App.start().server
@@ -27,43 +29,31 @@ afterAll(() => {
   if (server != null) server.close()
 })
 
-class Sample extends Model {
-  protected static tableName: string = 'sample2'
-  @attribute({ primary: true, autoIndex: true, type: 'int' })
-    id?: number
-
-  @attribute({ type: 'string' })
-    name?: string
-
-  @attribute({ type: 'int' })
-    age?: number
-}
-
 const db = new Database()
-const s = new Sample()
+const s = new Sample1()
 
 test('Test save object', async () => {
   s.name = 'Test name'
   s.age = 20
-  await db.save(Sample, s)
-  expect((await db.all(Sample)).length).toBe(1)
+  await db.save(Sample1, s)
+  expect((await db.all(Sample1)).length).toBe(1)
 })
 
 test('Test find object', async () => {
   let query = new QueryBuilder().greaterThan('age', 50)
-  expect((await db.find(Sample, query)).length).toBe(0)
+  expect((await db.find(Sample1, query)).length).toBe(0)
   query = new QueryBuilder().lessOrEqualThan('age', 50)
-  expect((await db.find(Sample, query)).length).toBe(1)
+  expect((await db.find(Sample1, query)).length).toBe(1)
 })
 
 test('Test update object', async () => {
   s.age = 30
-  await db.save(Sample, s)
-  const vals = await db.all(Sample)
+  await db.save(Sample1, s)
+  const vals = await db.all(Sample1)
   expect(vals[0].age).toBe(30)
 })
 
 test('Test delete object', async () => {
-  await db.destroy(Sample, s)
-  expect((await db.all(Sample)).length).toBe(0)
+  await db.destroy(Sample1, s)
+  expect((await db.all(Sample1)).length).toBe(0)
 })

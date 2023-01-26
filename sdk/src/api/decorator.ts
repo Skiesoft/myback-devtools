@@ -5,7 +5,7 @@ export interface AttributeProperty {
   primary?: boolean
   autoIndex?: boolean
   nullable?: boolean
-  type: 'int' | 'float' | 'string' | 'boolean'
+  type: 'int' | 'float' | 'string' | 'boolean' | 'relation'
 }
 
 /**
@@ -16,11 +16,13 @@ export interface AttributeProperty {
  */
 export function attribute (properties: AttributeProperty) {
   return (target: Model, propertyKey: string) => {
-    const attributeKey = 'attributes'
-    const attributes: string[] = Reflect.getMetadata(attributeKey, target) ?? []
+    const attributes: string[] = Reflect.getMetadata('attributes', target) ?? []
     attributes.push(propertyKey)
 
-    Reflect.defineMetadata(attributeKey, attributes, target)
+    Reflect.defineMetadata('attributes', attributes, target)
     Reflect.defineMetadata('property', properties, target, propertyKey)
+    if (properties.primary === true) {
+      Reflect.defineMetadata('primaryKey', propertyKey, target)
+    }
   }
 }

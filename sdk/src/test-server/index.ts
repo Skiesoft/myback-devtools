@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import http from 'http'
 import indexRouter from './routes/index'
 import cors from 'cors'
@@ -17,9 +17,14 @@ function start (): APIInstance {
 
   app.use('/v1/', indexRouter)
 
+  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error(err.stack)
+    res.status(500).send('Something broke!')
+  })
+
   const port = parseInt(process.env.PORT ?? '3000', 10)
   const server = app.listen(port, () => {
-    console.log(`API Tester started on ${port}`)
+    console.log(`Test server started on ${port}`)
   })
 
   return {

@@ -1,3 +1,5 @@
+import { AttributeProperty } from './decorator'
+
 export class Model implements Record<string, any> {
   protected static tableName: string = ''
   private _oldProperties: object = {}
@@ -36,10 +38,14 @@ export class Model implements Record<string, any> {
   }
 
   public getProperties (): any {
-    const props: any = {}
+    const res: any = {}
     for (const attr of this._attributes) {
-      props[attr] = this[attr as keyof typeof this] ?? null
+      res[attr] = this[attr as keyof typeof this]
+      const prop: AttributeProperty = Reflect.getMetadata('property', this, attr)
+      if (res[attr] === undefined && prop.nullable === true) {
+        res[attr] = null
+      }
     }
-    return props
+    return res
   }
 }
