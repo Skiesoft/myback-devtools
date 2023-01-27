@@ -1,6 +1,6 @@
-# example
+# Example
 
-This template should help get you started developing with Vue 3 in Vite.
+This template should help get you started developing with MyBack SDK.
 
 ## Recommended IDE Setup
 
@@ -17,23 +17,39 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
     2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
 2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
 ## Project Setup
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Define data models
 
+Define your data models that extends `Model` class and import in module.config.ts.
+Two models are provided for reference, see directory `src/model/`.
+
+Create database according to data models.
+```sh
+npm run create-db
+```
+
+### Development
+
+Start fake API server for development.
+```sh
+npm run test-server
+```
+
+Start module dev server.
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Visit the shown URL to see your module in live.
+
+### Production
+
+Type-Check, Compile and Minify for prodcution.
 
 ```sh
 npm run build
