@@ -33,20 +33,24 @@ export class SDK {
    * @param path API Path.
    * @param requestBody Request body payload.
    */
-  public static async request (method: HTTP_METHOD, path: string, requestBody: object = {}): Promise<AxiosResponse> {
+  public static async request (method: HTTP_METHOD, path: string, requestBody: FormData | object = {}): Promise<AxiosResponse> {
     if (this.config == null) {
       throw new Error('SDK not initailized yet')
+    }
+    const headers: any = {}
+    if (requestBody instanceof FormData) {
+      headers['Content-Type'] = 'multipart/form-data'
     }
     const { ENDPOINT, VERSION } = this.config
     switch (method) {
       case HTTP_METHOD.GET:
-        return await axios.get(`${ENDPOINT}/${VERSION}/${path}`)
+        return await axios.get(`${ENDPOINT}/${VERSION}/${path}`, { headers })
       case HTTP_METHOD.POST:
-        return await axios.post(`${ENDPOINT}/${VERSION}/${path}`, requestBody)
+        return await axios.post(`${ENDPOINT}/${VERSION}/${path}`, requestBody, { headers })
       case HTTP_METHOD.PUT:
-        return await axios.put(`${ENDPOINT}/${VERSION}/${path}`, requestBody)
+        return await axios.put(`${ENDPOINT}/${VERSION}/${path}`, requestBody, { headers })
       case HTTP_METHOD.DELETE:
-        return await axios.delete(`${ENDPOINT}/${VERSION}/${path}`)
+        return await axios.delete(`${ENDPOINT}/${VERSION}/${path}`, { headers })
     }
   }
 }

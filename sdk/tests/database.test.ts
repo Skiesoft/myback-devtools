@@ -1,8 +1,6 @@
-import { afterAll, beforeAll, expect, test } from '@jest/globals'
+import { beforeAll, expect, test } from '@jest/globals'
 import { Database, QueryBuilder, SDK } from '../src'
-import App from '../src/test-server'
 import { createSQLiteDatabase } from '../src/test-server/cli'
-import { Server } from 'http'
 import { Sample1 } from './models/sample1'
 import { Sample2 } from './models/sample2'
 
@@ -13,20 +11,12 @@ SDK.init({
   DATABASE: 'default'
 })
 
-let server: Server | null = null
-
 beforeAll(async () => {
   await createSQLiteDatabase({
     name: 'test',
     description: 'testing',
     models: [Sample1, Sample2]
   })
-
-  server = App.start().server
-})
-
-afterAll(() => {
-  if (server != null) server.close()
 })
 
 const db = new Database()

@@ -4,6 +4,7 @@ import { Model as _Model } from './api/model'
 import { QueryBuilder as _QueryBuilder } from './api/query-builder'
 import { Relation as _Relation } from './api/relation'
 import { attribute as _attribute } from './api/decorator'
+import { Storage as _Storage } from './api/storage'
 
 export const SDK = _SDK
 export const HTTP_METHOD = _HTTP_METHOD
@@ -12,3 +13,4 @@ export const Model = _Model
 export const QueryBuilder = _QueryBuilder
 export const Relation = _Relation
 export const attribute = _attribute
+export const Storage = _Storage

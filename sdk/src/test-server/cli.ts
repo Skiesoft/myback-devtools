@@ -3,8 +3,8 @@ import Database from 'better-sqlite3'
 import AppRoot from 'app-root-path'
 import inquirer from 'inquirer'
 import App from './index'
-import { AttributeProperty } from 'src/api/decorator'
-import { Model } from 'src'
+import { AttributeProperty } from '../api/decorator'
+import { Model } from '..'
 
 export interface ConfigType {
   name: string

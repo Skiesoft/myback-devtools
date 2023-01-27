@@ -8,7 +8,7 @@ export const db: Database.Database = new Database('./data/default.db')
  * @param val
  */
 export function b (val: any): string {
-  if (typeof val === null) return 'NULL'
+  if (val === null) return 'NULL'
   if (typeof val === 'string') return `'${val}'`
   else return val as string
 }
@@ -41,7 +41,7 @@ export function whereParser (query: any): string {
       Object.keys(val).forEach((k: string) => {
         const v: string | null = val[k]
         if (k === '$like') { // $text query looks a little different then other querys
-          whereArray.push(`${key} LIKE '%${v}%'`)
+          whereArray.push(`${key} LIKE '%${v as string}%'`)
         } else {
           whereArray.push(`${key}${ref[k as keyof typeof ref]}${b(v)}`)
         }
