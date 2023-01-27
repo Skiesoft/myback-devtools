@@ -6,17 +6,19 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "cli": "ts-node ./src/test-server/cli.ts",
     "build": "tsc -p ./tsconfig.build.json",
     "test": "jest --runInBand --collect-coverage"
+  },
+  "bin": {
+    "test-server": "./build/test-server/cli.js"
   },
   "dependencies": {
     "app-root-path": "^3.1.0",
     "axios": "^1.2.2",
     "better-sqlite3": "^8.0.1",
+    "commander": "^10.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "inquirer": "^8.2.5",
     "multer": "^1.4.5-lts.1",
     "reflect-metadata": "^0.1.13",
     "uuid": "^9.0.0"
@@ -26,7 +28,6 @@
     "@types/better-sqlite3": "^7.6.3",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.16",
-    "@types/inquirer": "^8.2.5",
     "@types/multer": "^1.4.7",
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.48.0",

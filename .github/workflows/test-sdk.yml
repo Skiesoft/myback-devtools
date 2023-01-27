@@ -26,7 +26,13 @@ jobs:
     - name: Install dependencies.
       run: npm ci
     - name: Build NPM package.
-      run: npm run build --if-present
+      run: npm run build
+    - name: Make CLI executable.
+      run: chmod +x ./build/test-server/cli.js
+    - name: Link CLI.
+      run: npm link
+    - name: Launch fake API
+      run: npx test-server --launch &
     - name: Run testsuits.
       run: npm test
 

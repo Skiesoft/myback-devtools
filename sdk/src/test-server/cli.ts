@@ -1,7 +1,8 @@
+#!/usr/bin/env node
 import 'reflect-metadata'
 import Database from 'better-sqlite3'
 import AppRoot from 'app-root-path'
-import inquirer from 'inquirer'
+import { program } from 'commander'
 import App from './index'
 import { AttributeProperty } from '../api/decorator'
 import { Model } from '..'
@@ -63,27 +64,24 @@ export async function launchFakeAPI (): Promise<any> {
 }
 
 if (require.main === module) {
-  inquirer.prompt([
-    {
-      name: 'entry',
-      type: 'list',
-      choices: ['Launch fake API', 'Create test database']
-    }
-  ]).then(async (answers) => {
-    const config: ConfigType = (await require(`${AppRoot as unknown as string}/module.config`) as unknown) as ConfigType
-    if (config === undefined) {
-      throw new Error('Module config undefined.')
-    }
+  async function main (): Promise<void> {
+    program
+      .option('--launch', 'launch fake API')
+      .option('--create-db', 'create test database')
 
-    switch (answers.entry) {
-      case 'Launch fake API':
-        await launchFakeAPI()
-        break
-      case 'Create test database':
-        await createSQLiteDatabase(config)
-        break
+    program.parse()
+
+    const options = program.opts()
+    if (options.createDb === true) {
+      const config: ConfigType = (await require(`${AppRoot as unknown as string}/module.config`) as unknown) as ConfigType
+      if (config === undefined) {
+        throw new Error('Module config undefined.')
+      }
+      await createSQLiteDatabase(config)
     }
-  }).catch((err) => {
-    throw err
-  })
+    if (options.launch === true) {
+      await launchFakeAPI()
+    }
+  }
+  main().catch((err) => { console.error(err) })
 }
