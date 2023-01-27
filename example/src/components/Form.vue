@@ -11,15 +11,11 @@ export default {
   },
   methods: {
     async addItem() {
-      const db = new Database()
-      let items = await db.all(Item)
-      if(items == undefined) items = []
-
       const item = new Item()
-      item.id = Math.floor(Math.random() * 1e5)
-      item.name = this.itemName;
+      item.name = this.itemName
       
-      await db.save(Item, item);
+      const db = new Database()
+      await db.save(Item, item)
       this.itemName = ''
       this.$emit('submitted')
     },

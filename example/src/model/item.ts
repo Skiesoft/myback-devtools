@@ -4,15 +4,15 @@ import { Model, attribute } from '@myback/sdk'
 export class Item extends Model {
   protected static tableName: string = 'items'
 
-  @attribute({ primary: true })
+  @attribute({ type: 'int', primary: true, autoIndex: true })
     id?: number
 
-  @attribute()
+  @attribute({ type: 'string' })
     name?: string
 
-  @attribute()
+  @attribute({ type: 'boolean' })
     checked: boolean = false
 
-  @attribute()
+  @attribute({ type: 'relation', nullable: true })
     list?: List
 }
