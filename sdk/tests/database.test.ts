@@ -34,7 +34,7 @@ test('Test save object', async () => {
 test('Test find object', async () => {
   let query = QueryBuilder.greaterThan('age', 50)
   expect((await db.find(Sample1, query)).length).toBe(0)
-  query = QueryBuilder.lessOrEqualThan('age', 50)
+  query = QueryBuilder.orderBy(QueryBuilder.lessOrEqualThan('age', 50), 'age')
   expect((await db.find(Sample1, query)).length).toBe(1)
 })
 

@@ -15,8 +15,13 @@ export interface OrType {
   or: Constaints[]
 }
 export type Constaints = CompareType | OrType | AndType
+export interface OrderBy {
+  column: string
+  order: 'asc' | 'desc'
+}
 export interface Query {
   where?: Constaints
+  orderBy?: OrderBy
 }
 
 export function compare (k: string, c: Comparators, v: ValueType): Query {
@@ -77,4 +82,12 @@ export function greaterOrEqualThan (k: string, v: ValueType): Query {
 
 export function like (k: string, v: ValueType): Query {
   return compare(k, 'like', v)
+}
+
+export function orderBy (q: Query, k: string, order: 'asc' | 'desc' = 'asc'): Query {
+  q.orderBy = {
+    column: k,
+    order
+  }
+  return q
 }

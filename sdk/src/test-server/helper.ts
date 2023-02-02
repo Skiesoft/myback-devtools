@@ -42,8 +42,11 @@ function WhereParser (where: Constaints): string {
  */
 export function QueryParser (query: Query): string {
   let stmt: string = ''
-  if (query.where != null) {
-    stmt += `WHERE ${WhereParser(query.where)}`
+  if (query.where !== undefined) {
+    stmt += `WHERE ${WhereParser(query.where)} `
+  }
+  if (query.orderBy !== undefined) {
+    stmt += `ORDER BY ${query.orderBy.column} ${query.orderBy.order} `
   }
   return stmt
 }
