@@ -24,6 +24,7 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
     const attributes: string[] = Reflect.getMetadata('attributes', model)
 
     const columns: string[] = []
+    const constraints: string[] = []
     for (const attr of attributes) {
       const prop: AttributeProperty = Reflect.getMetadata('property', model, attr)
       let type: string = prop.type
@@ -52,10 +53,11 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
       if (prop.type === 'relation') {
         const Foreign: typeof Model = Reflect.getMetadata('design:type', model, attr)
         const primaryKey: string = Reflect.getMetadata('primaryKey', new Foreign())
-        columns.push(`FOREIGN KEY(${attr}) REFERENCES ${Foreign.getTableName()}(${primaryKey})`)
+        constraints.push(`FOREIGN KEY(${attr}) REFERENCES ${Foreign.getTableName()}(${primaryKey})`)
       }
     }
-    db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName() as string} (${columns.join(', ')})`)
+    const stmts = columns.concat(constraints)
+    db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName() as string} (${stmts.join(', ')})`)
   }
 }
 
