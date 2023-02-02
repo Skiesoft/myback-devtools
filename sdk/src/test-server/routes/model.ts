@@ -1,5 +1,5 @@
 import express from 'express'
-import { b, db, whereParser } from '../helper'
+import { b, db, QueryParser } from '../helper'
 
 const router = express.Router()
 
@@ -44,7 +44,7 @@ router.put('/:model', (req, res) => {
   const { model } = req.params
   const matcher = JSON.parse(req.query.matcher as string)
   const { data } = req.body
-  const res2: (object | undefined) = db.prepare(`SELECT rowid FROM ${model} ${whereParser(matcher)}`).get()
+  const res2: (object | undefined) = db.prepare(`SELECT rowid FROM ${model} ${QueryParser(matcher)}`).get()
   if (res2 === undefined) {
     res.status(404).send({ error: 'No match' })
     return
@@ -62,11 +62,11 @@ router.delete('/:model', (req, res) => {
   }
   const { model } = req.params
   const matcher = JSON.parse(req.query.matcher as string)
-  if (db.prepare(`SELECT * FROM ${model} ${whereParser(matcher)}`).get() == null) {
+  if (db.prepare(`SELECT * FROM ${model} ${QueryParser(matcher)}`).get() == null) {
     res.status(404).send({ error: 'No match' })
     return
   }
-  db.prepare(`DELETE FROM ${model} ${whereParser(matcher)} LIMIT 1`).run()
+  db.prepare(`DELETE FROM ${model} ${QueryParser(matcher)} LIMIT 1`).run()
   res.status(200).send('Deleted')
 })
 
@@ -79,7 +79,7 @@ router.get('/:model/query', (req, res) => {
   }
   const { model } = req.params
   const matcher = JSON.parse((req.query.matcher ?? '{}') as string)
-  const stmt = db.prepare(`SELECT * FROM ${model} ${whereParser(matcher)} LIMIT ${pageSize} OFFSET ${page * pageSize}`)
+  const stmt = db.prepare(`SELECT * FROM ${model} ${QueryParser(matcher)} LIMIT ${pageSize} OFFSET ${page * pageSize}`)
   const result = stmt.all()
   res.send({ data: result })
 })
@@ -92,7 +92,7 @@ router.get('/:model/relation', (req, res) => {
 
   const { model } = req.params
   const matcher = JSON.parse(req.query.matcher as string)
-  const row = db.prepare(`SELECT * FROM ${model} ${whereParser(matcher)}`).get()
+  const row = db.prepare(`SELECT * FROM ${model} ${QueryParser(matcher)}`).get()
   if (row == null) {
     res.status(404).send({ error: 'No match' })
     return
@@ -121,7 +121,7 @@ router.get('/:model/relation', (req, res) => {
 router.get('/:model/count', (req, res) => {
   const { model } = req.params
   const matcher = JSON.parse(req.query.matcher as string)
-  const count = (db.prepare(`SELECT COUNT(*) FROM ${model} ${whereParser(matcher)}`).get())['COUNT(*)']
+  const count = (db.prepare(`SELECT COUNT(*) FROM ${model} ${QueryParser(matcher)}`).get())['COUNT(*)']
   res.send({ data: count })
 })
 

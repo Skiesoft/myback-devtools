@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios'
 import { HTTP_METHOD, SDK } from '../sdk'
 import { Model } from './model'
-import { QueryBuilder } from './query-builder'
+import { Query } from './query-builder'
 import { Relation } from './relation'
 
 /**
@@ -91,8 +91,8 @@ export class Database {
    * @param limit the maxmium limit of each page.
    * @returns
    */
-  async find (CustomEntity: typeof Model, query: QueryBuilder, pageId: number = 0, limit: number = 24): Promise<any[]> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${query.toString()}`)
+  async find (CustomEntity: typeof Model, query: Query, pageId: number = 0, limit: number = 24): Promise<any[]> {
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${JSON.stringify(query)}`)
     return res.data.data.map((properties: any) => Model.loadOldObject(CustomEntity, properties))
   }
 
@@ -103,8 +103,8 @@ export class Database {
    * @param query the constraint to filter number.
    * @returns
    */
-  async count (CustomEntity: typeof Model, query: QueryBuilder = new QueryBuilder()): Promise<Number> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `count?matcher=${query.toString()}`)
+  async count (CustomEntity: typeof Model, query: Query = {}): Promise<Number> {
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `count?matcher=${JSON.stringify(query)}`)
     return Number(res.data.data)
   }
 

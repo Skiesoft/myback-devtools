@@ -1,56 +1,80 @@
-type ValueType = number | string
-type ComparatorType = '$ne' | '$lt' | '$le' | '$gt' | '$ge'
+export type ValueType = number | string | null
+export type Comparators = 'eq' | 'ne' | 'lt' | 'le' | 'gt' | 'ge' | 'like'
+export interface CompareType {
+  type: 'comp'
+  key: string
+  op: Comparators
+  value: ValueType
+}
+export interface AndType {
+  type: 'and'
+  and: Constaints[]
+}
+export interface OrType {
+  type: 'or'
+  or: Constaints[]
+}
+export type Constaints = CompareType | OrType | AndType
+export interface Query {
+  where?: Constaints
+}
 
-/**
- * Help building matcher string
- */
-export class QueryBuilder {
-  private constraints: any = {}
-
-  equal (k: string, v: ValueType): QueryBuilder {
-    this.constraints[k] = v
-    return this
+export function compare (k: string, c: Comparators, v: ValueType): Query {
+  const res: CompareType = {
+    type: 'comp',
+    key: k,
+    op: c,
+    value: v
   }
+  return { where: res }
+}
 
-  setConstraints (k: string, c: ComparatorType, v: ValueType): void {
-    if (typeof this.constraints[k] !== 'object') {
-      this.constraints[k] = {}
-    }
-    this.constraints[k][c] = v
+export function and (...v: Query[]): Query {
+  const res: AndType = {
+    type: 'and',
+    and: v.map((e) => {
+      if (e.where === undefined) throw new Error('AND operator can not have empty query input.')
+      return e.where
+    })
   }
+  return { where: res }
+}
 
-  or (...v: QueryBuilder[]): QueryBuilder {
-    if (!Array.isArray(this.constraints.$or)) this.constraints.$or = []
-    for (let i = 0; i < v.length; i++) this.constraints.$or.push(v[i].constraints)
-    return this
+export function or (...v: Query[]): Query {
+  const res: OrType = {
+    type: 'or',
+    or: v.map((e) => {
+      if (e.where === undefined) throw new Error('OR operator can not have empty query input.')
+      return e.where
+    })
   }
+  return { where: res }
+}
 
-  notEqual (k: string, v: ValueType): QueryBuilder {
-    this.setConstraints(k, '$ne', v)
-    return this
-  }
+export function equal (k: string, v: ValueType): Query {
+  return compare(k, 'eq', v)
+}
 
-  lessThan (k: string, v: ValueType): QueryBuilder {
-    this.setConstraints(k, '$lt', v)
-    return this
-  }
+export function notEqual (k: string, v: ValueType): Query {
+  return compare(k, 'ne', v)
+}
 
-  lessOrEqualThan (k: string, v: ValueType): QueryBuilder {
-    this.setConstraints(k, '$le', v)
-    return this
-  }
+export function lessThan (k: string, v: ValueType): Query {
+  return compare(k, 'lt', v)
+}
 
-  greaterThan (k: string, v: ValueType): QueryBuilder {
-    this.setConstraints(k, '$gt', v)
-    return this
-  }
+export function lessOrEqualThan (k: string, v: ValueType): Query {
+  return compare(k, 'le', v)
+}
 
-  greaterOrEqualThan (k: string, v: ValueType): QueryBuilder {
-    this.setConstraints(k, '$ge', v)
-    return this
-  }
+export function greaterThan (k: string, v: ValueType): Query {
+  return compare(k, 'gt', v)
+}
 
-  toString (): string {
-    return JSON.stringify(this.constraints)
-  }
+export function greaterOrEqualThan (k: string, v: ValueType): Query {
+  return compare(k, 'ge', v)
+}
+
+export function like (k: string, v: ValueType): Query {
+  return compare(k, 'like', v)
 }
