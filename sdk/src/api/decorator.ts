@@ -6,7 +6,7 @@ export interface AttributeProperty {
   unique?: boolean
   autoIndex?: boolean
   nullable?: boolean
-  type: 'int' | 'float' | 'string' | 'boolean' | 'relation'
+  type: 'int' | 'float' | 'string' | 'boolean' | 'date' | 'datetime' | 'relation'
 }
 
 /**

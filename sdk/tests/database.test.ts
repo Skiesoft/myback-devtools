@@ -25,6 +25,8 @@ const s = new Sample1()
 test('Test save object', async () => {
   s.name = 'Test name'
   s.age = 20
+  s.date = new Date()
+  s.datetime = new Date()
   await db.save(Sample1, s)
   expect((await db.all(Sample1)).length).toBe(1)
 })

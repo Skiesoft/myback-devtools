@@ -40,10 +40,18 @@ export class Model implements Record<string, any> {
   public getProperties (): any {
     const res: any = {}
     for (const attr of this._attributes) {
-      res[attr] = this[attr as keyof typeof this]
       const prop: AttributeProperty = Reflect.getMetadata('property', this, attr)
-      if (res[attr] === undefined && prop.nullable === true) {
-        res[attr] = null
+      let val: any = this[attr as keyof typeof this]
+      if (val === undefined || val === null) {
+        if (prop.nullable === true) res[attr] = null
+        else if (prop.autoIndex !== true) {
+          throw new Error(`Attribute '${attr}' is not nullable, undefined or null is not allowed.`)
+        }
+      } else {
+        if (val instanceof Date) {
+          val = val.toISOString()
+        }
+        res[attr] = val
       }
     }
     return res

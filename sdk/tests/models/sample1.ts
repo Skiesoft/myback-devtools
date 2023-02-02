@@ -12,6 +12,12 @@ export class Sample1 extends Model {
   @attribute({ type: 'int' })
     age?: number
 
+  @attribute({ type: 'date' })
+    date?: Date
+
+  @attribute({ type: 'datetime' })
+    datetime?: Date
+
   @attribute({ type: 'relation', nullable: true })
     belongsTo?: Sample2
 }
