@@ -78,7 +78,7 @@ router.get('/:model/query', (req, res) => {
     return
   }
   const { model } = req.params
-  const matcher = JSON.parse(req.query.matcher as string)
+  const matcher = JSON.parse((req.query.matcher ?? '{}') as string)
   const stmt = db.prepare(`SELECT * FROM ${model} ${whereParser(matcher)} LIMIT ${pageSize} OFFSET ${page * pageSize}`)
   const result = stmt.all()
   res.send({ data: result })

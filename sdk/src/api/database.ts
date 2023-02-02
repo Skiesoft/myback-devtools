@@ -103,7 +103,7 @@ export class Database {
    * @param query the constraint to filter number.
    * @returns
    */
-  async count (CustomEntity: typeof Model, query: QueryBuilder): Promise<Number> {
+  async count (CustomEntity: typeof Model, query: QueryBuilder = new QueryBuilder()): Promise<Number> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `count?matcher=${query.toString()}`)
     return Number(res.data.data)
   }

@@ -38,6 +38,16 @@ test('Test find object', async () => {
   expect((await db.find(Sample1, query)).length).toBe(1)
 })
 
+test('Test page method', async () => {
+  expect((await db.page(Sample1, 0, 0)).length).toBe(0)
+  expect((await db.page(Sample1, 0, 1)).length).toBe(1)
+  expect((await db.page(Sample1, 1, 0)).length).toBe(0)
+})
+
+test('Test count method', async () => {
+  expect((await db.count(Sample1))).toBe(1)
+})
+
 test('Test update object', async () => {
   s.age = 30
   await db.save(Sample1, s)

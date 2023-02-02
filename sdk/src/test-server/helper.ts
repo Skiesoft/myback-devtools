@@ -49,6 +49,6 @@ export function whereParser (query: any): string {
     }
   })
   // join all condition statements with AND
-  const sqlStatement = `WHERE (${whereArray.join(' AND ')})`
-  return sqlStatement
+  if (whereArray.length === 0) return ''
+  else return `WHERE (${whereArray.join(' AND ')})`
 }
