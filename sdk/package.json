@@ -6,6 +6,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
+    "build": "tsc -p ./tsconfig.build.json",
     "prepublish": "tsc -p ./tsconfig.build.json",
     "test": "jest --runInBand --collect-coverage"
   },
