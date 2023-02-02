@@ -12,7 +12,7 @@
     "create-db": "ts-node --project tsconfig.json node_modules/@myback/sdk/build/test-server/cli.js --create-db"
   },
   "dependencies": {
-    "@myback/sdk": "^0.1.0",
+    "@myback/sdk": "^0.2.0",
     "vue": "^3.2.45"
   },
   "devDependencies": {
