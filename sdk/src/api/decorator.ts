@@ -3,6 +3,7 @@ import { Model } from './model'
 
 export interface AttributeProperty {
   primary?: boolean
+  unique?: boolean
   autoIndex?: boolean
   nullable?: boolean
   type: 'int' | 'float' | 'string' | 'boolean' | 'relation'

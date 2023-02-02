@@ -6,7 +6,7 @@ export class Sample1 extends Model {
   @attribute({ primary: true, autoIndex: true, type: 'int' })
     id?: number
 
-  @attribute({ type: 'string' })
+  @attribute({ type: 'string', unique: true })
     name?: string
 
   @attribute({ type: 'int' })

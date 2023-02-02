@@ -43,6 +43,7 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
 
       let col = `${attr} ${type} `
       if (prop.primary === true) col += 'PRIMARY KEY '
+      if (prop.unique === true) col += 'UNIQUE '
       if (prop.autoIndex === true) col += 'AUTOINCREMENT '
       if (prop.nullable !== true) col += 'NOT NULL '
       const defaultValue = (model)[attr]
