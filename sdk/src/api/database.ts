@@ -109,6 +109,19 @@ export class Database {
   }
 
   /**
+   * Return the sum of the column in matched rows.
+   *
+   * @param CustomEntity the entity model to count rows.
+   * @param column the column to sum.
+   * @param query the constraint to filter number.
+   * @returns
+   */
+  async sum (CustomEntity: typeof Model, column: string, query: Query = {}): Promise<Number> {
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `sum?column=${column}&matcher=${JSON.stringify(query)}`)
+    return Number(res.data.data)
+  }
+
+  /**
    * API request helper function.
    *
    * @param T the entity model to access.

@@ -125,4 +125,12 @@ router.get('/:model/count', (req, res) => {
   res.send({ data: count })
 })
 
+router.get('/:model/sum', (req, res) => {
+  const { model } = req.params
+  const column = req.query.column as string
+  const matcher = JSON.parse(req.query.matcher as string)
+  const sum = (db.prepare(`SELECT SUM(${column}) AS ANS FROM ${model} ${QueryParser(matcher)}`).get()).ANS
+  res.send({ data: sum })
+})
+
 export default router

@@ -48,6 +48,10 @@ test('Test count method', async () => {
   expect((await db.count(Sample1))).toBe(1)
 })
 
+test('Test sum method', async () => {
+  expect(await db.sum(Sample1, 'age')).toBe(20)
+})
+
 test('Test update object', async () => {
   s.age = 30
   await db.save(Sample1, s)
