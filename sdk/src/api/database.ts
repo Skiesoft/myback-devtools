@@ -92,7 +92,7 @@ export class Database {
    * @returns
    */
   async find (CustomEntity: typeof Model, query: Query, pageId: number = 0, limit: number = 24): Promise<any[]> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${JSON.stringify(query)}`)
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${encodeURI(JSON.stringify(query))}`)
     return res.data.data.map((properties: any) => Model.loadOldObject(CustomEntity, properties))
   }
 
