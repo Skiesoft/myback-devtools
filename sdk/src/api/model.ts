@@ -48,6 +48,10 @@ export class Model implements Record<string, any> {
           throw new Error(`Attribute '${attr}' is not nullable, undefined or null is not allowed.`)
         }
       } else {
+        if (val instanceof Model) {
+          const primaryKey: string = Reflect.getMetadata('primaryKey', val)
+          val = (val as any)[primaryKey]
+        }
         if (val instanceof Date) {
           val = val.toISOString()
         }

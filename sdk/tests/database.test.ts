@@ -38,6 +38,16 @@ test('Test find object', async () => {
   expect((await db.find(Sample1, query)).length).toBe(1)
 })
 
+test('Test save relation', async () => {
+  const s2 = new Sample2()
+  s2.text = 'random'
+  await db.save(Sample2, s2)
+  s.belongsTo = s2
+  await db.save(Sample1, s)
+  const query = QueryBuilder.equal('belongsTo', 1)
+  expect((await db.find(Sample1, query)).length).toBe(1)
+})
+
 test('Test page method', async () => {
   expect((await db.page(Sample1, 0, 0)).length).toBe(0)
   expect((await db.page(Sample1, 0, 1)).length).toBe(1)
