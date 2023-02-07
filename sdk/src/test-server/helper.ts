@@ -9,7 +9,6 @@ export const db: Database.Database = new Database('./data/default.db')
  * @param val
  */
 export function b (val: any): string {
-  if (val === null) return 'NULL'
   if (typeof val === 'string') return `'${val}'`
   else return val as string
 }
@@ -26,7 +25,8 @@ function WhereParser (where: Constaints): string {
   }
   switch (where.type) {
     case 'comp':
-      return `${where.key} ${ref[where.op]} ${b(where.value)}`
+      if (where.value === null) return `${where.key} IS ${where.op === 'ne' ? 'NOT' : ''} NULL`
+      else return `${where.key} ${ref[where.op]} ${b(where.value)}`
     case 'and':
       return '(' + where.and.map((e) => WhereParser(e)).join(' AND ') + ')'
     case 'or':

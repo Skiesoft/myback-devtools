@@ -28,7 +28,7 @@ test('Test save object', async () => {
   s.date = new Date()
   s.datetime = new Date()
   await db.save(Sample1, s)
-  expect((await db.all(Sample1)).length).toBe(1)
+  expect(await db.all(Sample1)).toStrictEqual([s])
 })
 
 test('Test find object', async () => {
@@ -72,6 +72,12 @@ test('Test update object', async () => {
 })
 
 test('Test delete object', async () => {
+  const s2 = new Sample1()
+  s2.name = 'Another name'
+  s2.age = 90
+  s2.date = new Date()
+  s2.datetime = new Date()
+  await db.save(Sample1, s2)
   await db.destroy(Sample1, s)
-  expect((await db.all(Sample1)).length).toBe(0)
+  expect(await db.all(Sample1)).toStrictEqual([s2])
 })

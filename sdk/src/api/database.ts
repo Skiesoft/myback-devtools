@@ -1,7 +1,8 @@
 import { AxiosResponse } from 'axios'
+import { QueryBuilder } from '../'
 import { HTTP_METHOD, SDK } from '../sdk'
 import { Model } from './model'
-import { Query } from './query-builder'
+import { Query, ValueType } from './query-builder'
 import { Relation } from './relation'
 
 /**
@@ -20,6 +21,17 @@ export class Database {
     this.id = id
   }
 
+  private queryToMatcher (query: Query): string {
+    return encodeURI(JSON.stringify(query))
+  }
+
+  private entityToMatcher<T extends Model>(entity: T): string {
+    const props = entity.getOldProperties()
+    if (props === null) throw new Error('Can not convert null entity to matcher, probably not saved yet.')
+    const eqs = Object.entries(props).map(([attr, val]) => QueryBuilder.equal(attr, val as ValueType))
+    return this.queryToMatcher(QueryBuilder.and(...eqs))
+  }
+
   /**
    * Save the object to the database.
    *
@@ -31,7 +43,7 @@ export class Database {
     if (entity.getOldProperties() === null) {
       res = await this.request(CustomEntity, HTTP_METHOD.POST, '', { data: entity.getProperties() })
     } else {
-      res = await this.request(CustomEntity, HTTP_METHOD.PUT, `?matcher=${JSON.stringify(entity.getOldProperties())}`, { data: entity.getProperties() })
+      res = await this.request(CustomEntity, HTTP_METHOD.PUT, `?matcher=${this.entityToMatcher(entity)}`, { data: entity.getProperties() })
     }
     Object.assign(entity, res.data.data)
     entity.updateOldProperties()
@@ -44,7 +56,7 @@ export class Database {
    * @param entity the entity object to destroy.
    */
   async destroy<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<void> {
-    await this.request(CustomEntity, HTTP_METHOD.DELETE, `?matcher=${JSON.stringify(entity.getOldProperties())}`)
+    await this.request(CustomEntity, HTTP_METHOD.DELETE, `?matcher=${this.entityToMatcher(entity)}`)
   }
 
   /**
@@ -55,7 +67,7 @@ export class Database {
    * @returns
    */
   async relation<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<Relation> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `relation?matcher=${JSON.stringify(entity.getOldProperties())}`)
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `relation?matcher=${this.entityToMatcher(entity)}`)
     return new Relation(res.data)
   }
 
@@ -92,7 +104,7 @@ export class Database {
    * @returns
    */
   async find (CustomEntity: typeof Model, query: Query, pageId: number = 0, limit: number = 24): Promise<any[]> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${encodeURI(JSON.stringify(query))}`)
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${this.queryToMatcher(query)}`)
     return res.data.data.map((properties: any) => Model.loadOldObject(CustomEntity, properties))
   }
 
@@ -104,7 +116,7 @@ export class Database {
    * @returns
    */
   async count (CustomEntity: typeof Model, query: Query = {}): Promise<Number> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `count?matcher=${JSON.stringify(query)}`)
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `count?&matcher=${this.queryToMatcher(query)}`)
     return Number(res.data.data)
   }
 
@@ -117,7 +129,7 @@ export class Database {
    * @returns
    */
   async sum (CustomEntity: typeof Model, column: string, query: Query = {}): Promise<Number> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `sum?column=${column}&matcher=${JSON.stringify(query)}`)
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `sum?column=${column}&matcher=${this.queryToMatcher(query)}`)
     return Number(res.data.data)
   }
 
