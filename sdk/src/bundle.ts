@@ -6,10 +6,10 @@ import appRootPath from 'app-root-path'
 
 const outDir: string = 'dist'
 
-function parseModel (CustomModel: typeof Model): object {
+function parseAttributes (CustomModel: typeof Model): object {
   const model = new CustomModel()
   const attributes: string[] = Reflect.getMetadata('attributes', model)
-  const column: any[] = []
+  const columns: any[] = []
   for (const attr of attributes) {
     const prop: any = Reflect.getMetadata('property', model, attr)
     prop.name = attr
@@ -20,14 +20,17 @@ function parseModel (CustomModel: typeof Model): object {
       prop.foreignTable = Foreign.getTableName()
       prop.foreignKey = primaryKey
     }
-    column.push(prop)
+    columns.push(prop)
   }
-  return column
+  return columns
 }
 
 export function transformModuleConfig (ModuleConfig: ConfigType): void {
   if (ModuleConfig.models !== undefined) {
-    ModuleConfig.models = ModuleConfig.models.map((CustomModel: typeof Model) => parseModel(CustomModel))
+    ModuleConfig.models = ModuleConfig.models.map((CustomModel: typeof Model) => ({
+      name: CustomModel.getTableName(),
+      attributes: parseAttributes(CustomModel)
+    }))
   }
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true })
