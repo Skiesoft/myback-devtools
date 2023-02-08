@@ -1,9 +1,10 @@
 <script lang="ts">
+import { defineComponent } from 'vue'
 import { Database } from '@myback/sdk'
 import { Item } from './model/item'
 import Form from './components/Form.vue'
 
-export default {
+export default defineComponent({
   data() {
     const items: Array<Item> = [];
     return {
@@ -27,7 +28,7 @@ export default {
   components: {
     Form
   }
-}
+})
 </script>
 
 <template>
@@ -40,7 +41,7 @@ export default {
             <span class="">{{ item.checked }}</span>
             {{ item.name }}
           </div>
-          <span><button class="btn btn-danger" @click="remove(item)">Delete</button></span>
+          <span><button class="btn btn-danger" @click="remove(item as Item)">Delete</button></span>
         </li>
       </ul>
     </div>

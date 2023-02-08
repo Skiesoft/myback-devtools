@@ -1,8 +1,9 @@
 <script lang="ts">
+import { defineComponent } from 'vue'
 import { Database } from '@myback/sdk'
 import { Item } from '../model/item'
 
-export default {
+export default defineComponent({
   emits: ['submitted'],
   data() {
     return {
@@ -20,7 +21,7 @@ export default {
       this.$emit('submitted')
     },
   }
-}
+})
 </script>
 
 <template>

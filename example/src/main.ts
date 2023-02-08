@@ -2,8 +2,6 @@ import { createApp } from 'vue'
 import { SDK } from '@myback/sdk'
 import App from './App.vue'
 
-import './assets/app.css'
-
 declare global {
   interface Window {
     API_KEY: string
