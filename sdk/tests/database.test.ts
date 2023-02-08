@@ -50,6 +50,12 @@ test('Test save relation', async () => {
   expect((await db.find(Sample1, query)).length).toBe(1)
 })
 
+test('Test load relation', async () => {
+  const s2: Sample1 = (await db.find(Sample1, QueryBuilder.equal('id', s.id ?? 1)))[0]
+  await db.loadRelation(Sample1, s2)
+  expect(s2.belongsTo?.text).toBe('random')
+})
+
 test('Test page method', async () => {
   expect((await db.page(Sample1, 0, 0)).length).toBe(0)
   expect((await db.page(Sample1, 0, 1)).length).toBe(1)

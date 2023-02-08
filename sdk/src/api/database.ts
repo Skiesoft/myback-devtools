@@ -3,7 +3,6 @@ import { QueryBuilder } from '../'
 import { HTTP_METHOD, SDK } from '../sdk'
 import { Model } from './model'
 import { Query, ValueType } from './query-builder'
-import { Relation } from './relation'
 
 /**
  * Represent a database in backend. Use for retrieve {@link Table}
@@ -57,18 +56,6 @@ export class Database {
    */
   async destroy<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<void> {
     await this.request(CustomEntity, HTTP_METHOD.DELETE, `?matcher=${this.entityToMatcher(entity)}`)
-  }
-
-  /**
-   * Return the relationship of the specific collection.
-   *
-   * @param CustomEntity the entity model.
-   * @param entity the entity object to fetch relationships.
-   * @returns
-   */
-  async relation<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<Relation> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `relation?matcher=${this.entityToMatcher(entity)}`)
-    return new Relation(res.data)
   }
 
   /**
@@ -131,6 +118,12 @@ export class Database {
   async sum (CustomEntity: typeof Model, column: string, query: Query = {}): Promise<Number> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `sum?column=${column}&matcher=${this.queryToMatcher(query)}`)
     return Number(res.data.data)
+  }
+
+  public async loadRelation<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<any> {
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `get-relation?&matcher=${this.entityToMatcher(entity)}`)
+    entity = Object.assign(entity, res.data.data)
+    return entity
   }
 
   /**

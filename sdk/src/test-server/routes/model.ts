@@ -84,7 +84,7 @@ router.get('/:model/query', (req, res) => {
   res.send({ data: result })
 })
 
-router.get('/:model/relation', (req, res) => {
+router.get('/:model/get-relation', (req, res) => {
   if (req.query.matcher === undefined) {
     res.status(400).send({ error: 'Missing Matcher' })
     return
@@ -98,24 +98,13 @@ router.get('/:model/relation', (req, res) => {
     return
   }
 
-  const outForeignKeys = db.prepare(`SELECT * FROM pragma_foreign_key_list('${model}')`).all()
-  const outboundRelation: any = {}
-  for (const { from, to, table } of outForeignKeys) {
-    const data = db.prepare(`SELECT * FROM ${table as string} WHERE ${to as string}=${row[from] as string}`).all()
-    outboundRelation[table] = { data }
+  const foreignKeys = db.prepare(`SELECT * FROM pragma_foreign_key_list('${model}')`).all()
+  const relations: any = {}
+  for (const { from, to, table } of foreignKeys) {
+    const data = db.prepare(`SELECT * FROM ${table as string} WHERE ${to as string}=${row[from] as string}`).get()
+    relations[from] = data
   }
-  const tables = (db.prepare("SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%'").all())
-    .filter(({ name }) => name !== model)
-  const inboundRelation: any = {}
-  for (const { name } of tables) {
-    const foreignKeys = db.prepare(`SELECT * FROM pragma_foreign_key_list('${name as string}')`).all()
-    for (const { from, to, table } of foreignKeys) {
-      if (table !== model) { continue }
-      const data = db.prepare(`SELECT * FROM ${name as string} WHERE ${from as string}=${row[to] as string}`).all()
-      inboundRelation[name] = { data: (inboundRelation[name]?.data ?? []).concat(data) }
-    }
-  }
-  res.send({ in: inboundRelation, out: outboundRelation })
+  res.send({ data: relations })
 })
 
 router.get('/:model/count', (req, res) => {
