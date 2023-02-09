@@ -4,7 +4,7 @@ import { FileInformation } from 'src/api/storage'
 import axios from 'axios'
 
 SDK.init({
-  API_KEY: 'NOT_REQUIRE_FOR_TESTER',
+  API_TOKEN: 'NOT_REQUIRE_FOR_TESTER',
   ENDPOINT: 'http://localhost:3000',
   VERSION: 'v1',
   DATABASE: 'default'

@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosResponse, RawAxiosRequestHeaders } from 'axios'
 
 export enum HTTP_METHOD {
   GET,
@@ -8,7 +8,7 @@ export enum HTTP_METHOD {
 }
 
 interface SDKConfig {
-  API_KEY: string
+  API_TOKEN: string
   ENDPOINT: string
   VERSION: string
   DATABASE: string
@@ -37,7 +37,9 @@ export class SDK {
     if (this.config == null) {
       throw new Error('SDK not initailized yet')
     }
-    const headers: any = {}
+    const headers: RawAxiosRequestHeaders = {
+      Authorization: `Bearer ${this.config.API_TOKEN}`
+    }
     if (requestBody instanceof FormData) {
       headers['Content-Type'] = 'multipart/form-data'
     }

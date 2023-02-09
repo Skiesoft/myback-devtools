@@ -5,7 +5,7 @@ import { Sample1 } from './models/sample1'
 import { Sample2 } from './models/sample2'
 
 SDK.init({
-  API_KEY: 'NOT_REQUIRE_FOR_TESTER',
+  API_TOKEN: 'NOT_REQUIRE_FOR_TESTER',
   ENDPOINT: 'http://localhost:3000',
   VERSION: 'v1',
   DATABASE: 'default'
