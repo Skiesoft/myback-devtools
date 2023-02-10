@@ -23,7 +23,7 @@ const db = new Database()
 const s = new Sample1()
 
 test('Test save object', async () => {
-  s.name = 'Test name'
+  s.name = 'Test#& name'
   s.age = 20
   s.date = new Date()
   s.datetime = new Date()

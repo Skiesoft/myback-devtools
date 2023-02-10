@@ -21,7 +21,7 @@ export class Database {
   }
 
   private queryToMatcher (query: Query): string {
-    return encodeURI(JSON.stringify(query))
+    return encodeURIComponent(JSON.stringify(query))
   }
 
   private entityToMatcher<T extends Model>(entity: T): string {
