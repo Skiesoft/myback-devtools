@@ -3,17 +3,19 @@ import { Constaints, Query } from 'src/api/query-builder'
 
 export const db: Database.Database = new Database('./data/default.db')
 
-/**
- * Helper function to encode parameter into sql statement
- *
- * @param val
- */
-export function b (val: any): string {
-  if (typeof val === 'string') return `'${val}'`
-  else return val as string
+interface Expression {
+  query: string
+  params: any[]
 }
 
-function WhereParser (where: Constaints): string {
+export function concatExpression (exprs: Expression[], prefix: string = '', suffix: string = '', delimiter: string = ' '): Expression {
+  return {
+    query: prefix + exprs.map((e) => e.query).join(delimiter) + suffix,
+    params: Array<any>().concat(...exprs.map((e) => e.params))
+  }
+}
+
+export function WhereParser (where: Constaints): Expression {
   const ref = {
     eq: '=',
     ne: '!=',
@@ -25,12 +27,21 @@ function WhereParser (where: Constaints): string {
   }
   switch (where.type) {
     case 'comp':
-      if (where.value === null) return `${where.key} IS ${where.op === 'ne' ? 'NOT' : ''} NULL`
-      else return `${where.key} ${ref[where.op]} ${b(where.value)}`
+      if (where.value === null) {
+        return {
+          query: `${where.key} IS ${where.op === 'ne' ? 'NOT' : ''} NULL`,
+          params: []
+        }
+      } else {
+        return {
+          query: `${where.key} ${ref[where.op]} ?`,
+          params: [where.value]
+        }
+      }
     case 'and':
-      return '(' + where.and.map((e) => WhereParser(e)).join(' AND ') + ')'
+      return concatExpression(where.and.map((e) => WhereParser(e)), '(', ')', ' AND ')
     case 'or':
-      return '(' + where.or.map((e) => WhereParser(e)).join(' OR ') + ')'
+      return concatExpression(where.or.map((e) => WhereParser(e)), '(', ')', ' OR ')
   }
 }
 
@@ -40,13 +51,16 @@ function WhereParser (where: Constaints): string {
  * @param query the query object
  * @returns
  */
-export function QueryParser (query: Query): string {
-  let stmt: string = ''
+export function QueryParser (query: Query): Expression {
+  const expr = {
+    query: '',
+    params: []
+  }
   if (query.where !== undefined) {
-    stmt += `WHERE ${WhereParser(query.where)} `
+    return concatExpression([WhereParser(query.where)], ' WHERE ')
   }
   if (query.orderBy !== undefined) {
-    stmt += `ORDER BY ${query.orderBy.column} ${query.orderBy.order} `
+    expr.query += ` ORDER BY ${query.orderBy.column} ${query.orderBy.order} `
   }
-  return stmt
+  return expr
 }
