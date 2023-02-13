@@ -1,5 +1,5 @@
 import express from 'express'
-import { concatExpression, db, QueryParser } from '../helper'
+import { concatExpression, db, ParamType, QueryParser } from '../helper'
 
 const router = express.Router()
 
@@ -51,7 +51,7 @@ router.put('/:model', (req, res) => {
     return
   }
   const id = Object.values(res2)[0] as number
-  const setter = Object.entries(data).map(([k, v]) => ({ query: `${k}=?`, params: [v] }))
+  const setter = Object.entries(data).map(([k, v]) => ({ query: `${k}=?`, params: [v as ParamType] }))
   const expr2 = concatExpression(setter, `UPDATE ${model} SET `, ' WHERE rowid=?', ',')
   expr2.params.push(id)
   db.prepare(expr2.query).run(...expr2.params)

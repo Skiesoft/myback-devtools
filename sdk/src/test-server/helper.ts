@@ -3,9 +3,10 @@ import { Constaints, Query } from 'src/api/query-builder'
 
 export const db: Database.Database = new Database('./data/default.db')
 
+export type ParamType = number | string | null
 interface Expression {
   query: string
-  params: any[]
+  params: ParamType[]
 }
 
 export function concatExpression (exprs: Expression[], prefix: string = '', suffix: string = '', delimiter: string = ' '): Expression {
@@ -35,7 +36,7 @@ export function WhereParser (where: Constaints): Expression {
       } else {
         return {
           query: `${where.key} ${ref[where.op]} ?`,
-          params: [where.value]
+          params: [where.value as ParamType]
         }
       }
     case 'and':
