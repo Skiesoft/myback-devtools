@@ -3,8 +3,7 @@
   "version": "0.4.4",
   "description": "Software Development Kit for myback module.",
   "homepage": "https://developer.myback.app",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "exports": "./build",
   "scripts": {
     "build": "tsc -p ./tsconfig.build.json",
     "prepublish": "tsc -p ./tsconfig.build.json",
