@@ -53,12 +53,12 @@ export function WhereParser (where: Constaints): Expression {
  * @returns
  */
 export function QueryParser (query: Query): Expression {
-  const expr = {
+  let expr: Expression = {
     query: '',
     params: []
   }
   if (query.where !== undefined) {
-    return concatExpression([WhereParser(query.where)], ' WHERE ')
+    expr = concatExpression([WhereParser(query.where)], ' WHERE ')
   }
   if (query.orderBy !== undefined) {
     expr.query += ` ORDER BY ${query.orderBy.column} ${query.orderBy.order} `
