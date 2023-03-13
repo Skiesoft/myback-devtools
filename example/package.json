@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "build": "vue-cli-service build && ts-node node_modules/@myback/sdk/build/bundle.js",
-    "test-server": "ts-node --project tsconfig.json node_modules/@myback/sdk/build/test-server/cli.js --launch",
-    "create-db": "ts-node --project tsconfig.json node_modules/@myback/sdk/build/test-server/cli.js --create-db"
+    "dev": "myback-sdk-cli serve",
+    "build": "myback-sdk-cli build"
   },
   "dependencies": {
     "@myback/sdk": "^0.4.0",
@@ -16,8 +14,6 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "ts-node": "^10.9.1",
     "typescript": "~4.5.5"
   }
 }

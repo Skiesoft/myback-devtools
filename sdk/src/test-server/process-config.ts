@@ -1,9 +1,6 @@
-#!/usr/bin/env node
 import 'reflect-metadata'
 import Database from 'better-sqlite3'
 import AppRoot from 'app-root-path'
-import { program } from 'commander'
-import App from './index'
 import { AttributeProperty } from '../api/decorator'
 import { Model } from '..'
 
@@ -13,7 +10,7 @@ export interface ConfigType {
   models?: any[]
 }
 
-export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
+export function createSQLiteDatabase (config: ConfigType): void {
   if (config.models === undefined) {
     throw new Error('No model in config file, can not create test database.')
   }
@@ -59,32 +56,4 @@ export async function createSQLiteDatabase (config: ConfigType): Promise<void> {
     const stmts = columns.concat(constraints)
     db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName() as string} (${stmts.join(', ')})`)
   }
-}
-
-export async function launchFakeAPI (): Promise<any> {
-  const { server } = await App.start()
-  return server
-}
-
-if (require.main === module) {
-  async function main (): Promise<void> {
-    program
-      .option('--launch', 'launch fake API')
-      .option('--create-db', 'create test database')
-
-    program.parse()
-
-    const options = program.opts()
-    if (options.createDb === true) {
-      const config: ConfigType = (await require(`${AppRoot as unknown as string}/module.config`) as unknown) as ConfigType
-      if (config === undefined) {
-        throw new Error('Module config undefined.')
-      }
-      await createSQLiteDatabase(config)
-    }
-    if (options.launch === true) {
-      await launchFakeAPI()
-    }
-  }
-  main().catch((err) => { console.error(err) })
 }

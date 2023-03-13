@@ -1,6 +1,6 @@
 import { beforeAll, expect, test } from '@jest/globals'
 import { Database, QueryBuilder, SDK } from '../src'
-import { createSQLiteDatabase } from '../src/test-server/cli'
+import { createSQLiteDatabase } from '../src/test-server/process-config'
 import { Sample1 } from './models/sample1'
 import { Sample2 } from './models/sample2'
 

@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals'
-import { ConfigType } from 'src/test-server/cli'
+import { ConfigType } from 'src/test-server/process-config'
 import { transformModuleConfig } from '../src/bundle'
 import { Sample1 } from './models/sample1'
 import { Sample2 } from './models/sample2'

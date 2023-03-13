@@ -1,8 +1,7 @@
 import 'reflect-metadata'
 import fs from 'fs'
 import { Model } from 'src'
-import { ConfigType } from './test-server/cli'
-import appRootPath from 'app-root-path'
+import { ConfigType } from './test-server/process-config'
 
 const outDir: string = 'dist'
 
@@ -36,9 +35,4 @@ export function transformModuleConfig (ModuleConfig: ConfigType): void {
     fs.mkdirSync(outDir, { recursive: true })
   }
   fs.writeFileSync(`${outDir}/module.config.json`, JSON.stringify(ModuleConfig))
-}
-
-if (require.main === module) {
-  console.log('Compiling module.config.ts')
-  transformModuleConfig(require(`${appRootPath as unknown as string}/module.config.ts`))
 }
