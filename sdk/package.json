@@ -1,6 +1,6 @@
 {
   "name": "@myback/sdk",
-  "version": "0.5.0-rc1",
+  "version": "0.5.0",
   "description": "Software Development Kit for myback module.",
   "homepage": "https://developer.myback.app",
   "main": "build/index.js",
