@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { SDK } from '@myback/sdk'
 import App from './App.vue'
+import bootstrap from './bootstrap'
 
 declare global {
   interface Window {
@@ -18,4 +19,6 @@ SDK.init({
   DATABASE: window.DATABASE ?? 'default'
 })
 
-createApp(App).mount('#app')
+bootstrap().then(() => {
+  createApp(App).mount('#app')
+})

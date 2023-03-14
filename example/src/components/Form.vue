@@ -4,6 +4,7 @@ import { Database } from '@myback/sdk'
 import { Item } from '../model/item'
 
 export default defineComponent({
+  props: ['list'],
   emits: ['submitted'],
   data() {
     return {
@@ -14,6 +15,7 @@ export default defineComponent({
     async addItem() {
       const item = new Item()
       item.name = this.itemName
+      item.list = this.list.id
       
       const db = new Database()
       await db.save(Item, item)
