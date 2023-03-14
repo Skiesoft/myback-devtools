@@ -24,7 +24,9 @@ router.post('/:model', (req, res) => {
   const placeholder: string = Object.keys(req.body.data).map(() => '?').join(',')
   const { model } = req.params
   let stmt = db.prepare(`INSERT INTO ${model} (${columns}) VALUES (${placeholder})`)
-  stmt.run(...Object.values<number | string>(req.body.data))
+  let values = Object.values(req.body.data)
+  values = values.map((v) => (typeof v === 'boolean' ? Number(v) : v))
+  stmt.run(...values)
   stmt = db.prepare('SELECT last_insert_rowid() AS rowid')
   const { rowid } = stmt.get()
   stmt = db.prepare(`SELECT * FROM ${model} WHERE rowid=?`)
