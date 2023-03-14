@@ -2,7 +2,7 @@
 
 import AppRoot from 'app-root-path'
 import minimist from 'minimist'
-import { ConfigType, createSQLiteDatabase } from '../src/test-server/process-config'
+import { ConfigType, createSQLiteDatabase, getDefaultConfigs } from '../src/test-server/process-config'
 import TestServer from '../src/test-server'
 import { transformModuleConfig } from '../src/bundle'
 import childProcess from 'child_process'
@@ -35,6 +35,21 @@ if (args.noVue !== true) {
   // Copy public directory to app root.
   const targetPath = `${AppRoot as unknown as string}/public`
   fse.copySync(path.join(__dirname, '/../public'), targetPath, { overwrite: true })
+  // Write default configs.
+  if (config.configs !== undefined) {
+    const defaults = getDefaultConfigs(config.configs)
+    const htmlPath = path.join(targetPath, 'index.html')
+    fse.readFile(htmlPath, 'utf8', (err, data) => {
+      if (err != null) {
+        console.log(err); return
+      }
+      const result = data.replace(/<!--MODULE_CONFIG-->/g, `window.MYBACK_MODULE_CONFIGS = ${defaults as unknown as string}`)
+
+      fse.writeFile(htmlPath, result, 'utf8', function (err) {
+        if (err != null) console.log(err)
+      })
+    })
+  }
 
   // Run vue-cli-service
   const vueServicePath = require.resolve('@vue/cli-service/bin/vue-cli-service.js')

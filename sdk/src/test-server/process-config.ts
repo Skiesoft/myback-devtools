@@ -4,10 +4,36 @@ import AppRoot from 'app-root-path'
 import { AttributeProperty } from '../api/decorator'
 import { Model } from '..'
 
+interface ModuleScalarConfig {
+  key: string
+  type: 'integer' | 'float' | 'string' | 'boolean'
+  default?: string | number | boolean
+
+}
+
+interface ModuleOptionConfig {
+  key: string
+  type: 'options'
+  multipleChoice?: boolean
+  options: string[]
+  default: string
+}
+
+interface ModuleListConfig {
+  key: string
+  type: 'list'
+  userspace?: boolean
+  columns: Array<ModuleScalarConfig | ModuleOptionConfig>
+  default?: any[]
+}
+
+type ModuleConfig = ModuleScalarConfig | ModuleOptionConfig | ModuleListConfig
+
 export interface ConfigType {
   name: string
   description?: string
   models?: any[]
+  configs?: ModuleConfig[]
 }
 
 export function createSQLiteDatabase (config: ConfigType): void {
@@ -56,4 +82,12 @@ export function createSQLiteDatabase (config: ConfigType): void {
     const stmts = columns.concat(constraints)
     db.exec(`CREATE TABLE IF NOT EXISTS ${CustomModel.getTableName() as string} (${stmts.join(', ')})`)
   }
+}
+
+export function getDefaultConfigs (configs: ModuleConfig[]): Record<string, any> {
+  const res: Record<string, any> = {}
+  for (const conf of configs) {
+    res[conf.key] = conf.default
+  }
+  return res
 }
