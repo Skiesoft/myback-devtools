@@ -25,6 +25,30 @@ jobs:
       - run: npx myback-sdk-cli serve --noVue &
       - run: npm test
 
+  public-docs:
+    needs: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./sdk
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: sdk/package-lock.json
+      - run: npm ci
+      - name: Generate docs
+        run: npm run docs
+      - name: Upload docs
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ftp.skiesoft.com
+          username: myback-sdk-docs
+          password: ${{ secrets.DOCS_FTP_PASSWORD }}
+
   publish-npm:
     needs: build
     runs-on: ubuntu-latest

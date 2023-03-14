@@ -1,6 +1,9 @@
-# myback-devtools 
-[![Documentation Status](https://readthedocs.org/projects/myback-devtools/badge/?version=latest)](https://myback-devtools.readthedocs.io/en/latest/?badge=latest)
-[![Test API Tester](https://github.com/Feline-Studio/myback-devtools/actions/workflows/test-api-tester.yml/badge.svg)](https://github.com/Feline-Studio/myback-devtools/actions/workflows/test-api-tester.yml)
+# myback-devtools
 [![Test SDK](https://github.com/Feline-Studio/myback-devtools/actions/workflows/test-sdk.yml/badge.svg)](https://github.com/Feline-Studio/myback-devtools/actions/workflows/test-sdk.yml)
 
-Tools for developing module in MyBack.
+This is a mono reposority for Myback SDK, the tools for developing module in MyBack.
+
+
+## Documentations
+
+Visit SDK documentations at [https://sdk-docs.myback.app/](https://sdk-docs.myback.app/) for more details.

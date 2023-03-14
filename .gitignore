@@ -1,5 +1,6 @@
 # Package build output
 */build/
+*/out/
 
 # SQLite Database fie
 **/*.db
