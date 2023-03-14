@@ -36,16 +36,16 @@ if (args.noVue !== true) {
   const targetPath = `${AppRoot as unknown as string}/public`
   fse.copySync(path.join(__dirname, '/../public'), targetPath, { overwrite: true })
   // Write default configs.
-  if (config.configs !== undefined) {
-    const defaults = getDefaultConfigs(config.configs)
+  if (config.configables !== undefined) {
+    const defaults = getDefaultConfigs(config.configables)
     const htmlPath = path.join(targetPath, 'index.html')
-    fse.readFile(htmlPath, 'utf8', (err, data) => {
+    fse.readFile(htmlPath, 'utf8', (err: any, data: string) => {
       if (err != null) {
         console.log(err); return
       }
-      const result = data.replace(/<!--MODULE_CONFIG-->/g, `window.MYBACK_MODULE_CONFIGS = ${defaults as unknown as string}`)
+      const result = data.replace('<!--MODULE_CONFIG-->', `window.MYBACK_MODULE_CONFIGS = ${JSON.stringify(defaults)}`)
 
-      fse.writeFile(htmlPath, result, 'utf8', function (err) {
+      fse.writeFile(htmlPath, result, 'utf8', (err: any) => {
         if (err != null) console.log(err)
       })
     })

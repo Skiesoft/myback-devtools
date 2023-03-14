@@ -33,7 +33,7 @@ export interface ConfigType {
   name: string
   description?: string
   models?: any[]
-  configs?: ModuleConfig[]
+  configables?: ModuleConfig[]
 }
 
 export function createSQLiteDatabase (config: ConfigType): void {
