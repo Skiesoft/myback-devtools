@@ -15,8 +15,8 @@ let fileInfo: FileInformation = { filename: '', url: '' }
 test('Test upload file', async () => {
   const storage = new Storage()
   const f = new File(['(⌐□_□)'], 'chucknorris.png', { type: 'image/png' })
-  fileInfo = await storage.uploadWithAutoname(f)
-  expect(fileInfo.filename.length).toBe(36)
+  fileInfo = await storage.uploadWithAutoname(f, 'images')
+  expect(fileInfo.filename.length).toBe(43) // images/{uuidv4s}
 })
 
 test('Test retrieve file', async () => {

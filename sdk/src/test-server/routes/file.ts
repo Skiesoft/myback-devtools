@@ -2,15 +2,16 @@ import appRootPath from 'app-root-path'
 import express from 'express'
 import multer from 'multer'
 import fs from 'fs'
+import path from 'path'
 
 const router = express.Router()
 const basePath = `${appRootPath as unknown as string}/data/storage/default`
 
-router.get('/:filename', (req, res) => {
-  const { filename } = req.params
-  const absPath = `${basePath}/${filename}`
+router.get('/*', (req, res) => {
+  const filename = (req.params as any)[0]
+  const absPath = path.join(basePath, filename)
   if (fs.existsSync(absPath)) {
-    res.status(200).download(`${basePath}/${filename}`)
+    res.status(200).download(absPath)
   } else {
     res.status(404).send({ error: 'File no found' })
   }
@@ -21,12 +22,16 @@ const storage = multer.diskStorage({
     cb(null, basePath)
   },
   filename: function (req, file, cb) {
-    cb(null, req.params.filename)
+    const filename = (req.params as any)[0]
+    fs.mkdirSync(path.dirname(path.join(basePath, filename)), {
+      recursive: true
+    })
+    cb(null, filename)
   }
 })
 
 const upload = multer({ storage })
-router.post('/:filename', upload.single('file'), (req, res) => {
+router.post('/*', upload.single('file'), (req, res) => {
   res.send({
     data: {
       filename: req.file?.filename,
@@ -35,9 +40,9 @@ router.post('/:filename', upload.single('file'), (req, res) => {
   })
 })
 
-router.delete('/:filename', (req, res) => {
-  const { filename } = req.params
-  const absPath = `${basePath}/${filename}`
+router.delete('/*', (req, res) => {
+  const filename = (req.params as any)[0]
+  const absPath = path.join(basePath, filename)
   if (fs.existsSync(absPath)) {
     fs.unlinkSync(absPath)
     res.status(200).send('Deleted')

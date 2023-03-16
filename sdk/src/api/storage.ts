@@ -40,11 +40,12 @@ export class Storage {
   /**
    * Upload file to storage with uuid filename.
    *
-   * @param file
+   * @param file the file to upload
+   * @param dir the directory to upload the file.
    * @returns
    */
-  async uploadWithAutoname (file: File): Promise<FileInformation> {
-    return await this.upload(uuidv4(), file)
+  async uploadWithAutoname (file: File, dir: string = ''): Promise<FileInformation> {
+    return await this.upload(`${dir}/${uuidv4()}`, file)
   }
 
   /**
