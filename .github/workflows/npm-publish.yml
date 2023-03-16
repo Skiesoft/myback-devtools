@@ -20,7 +20,7 @@ jobs:
           cache-dependency-path: sdk/package-lock.json
       - run: npm i -g ts-node
       - run: npm ci
-      - run: chmod +x ./bin/myback-sdk-cli.ts
+      - run: chmod +x ./build/bin/myback-sdk-cli.js
       - run: npm link
       - run: npx myback-sdk-cli serve --noVue &
       - run: npm test
@@ -65,7 +65,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: sdk/package-lock.json
       - run: npm ci
-      - run: chmod +x ./bin/myback-sdk-cli.ts
+      - run: chmod +x ./build/bin/myback-sdk-cli.js
       - run: npm link
       - run: npm publish
         env:

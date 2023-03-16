@@ -7,13 +7,13 @@
   "types": "build/index.d.ts",
   "scripts": {
     "docs": "typedoc --entryPointStrategy expand --out ./out src/api",
-    "serve": "./bin/myback-sdk-cli.ts",
+    "serve": "./build/bin/myback-sdk-cli.js",
     "build": "tsc -p ./tsconfig.build.json",
     "prepublish": "tsc -p ./tsconfig.build.json",
     "test": "jest --runInBand --collect-coverage"
   },
   "bin": {
-    "myback-sdk-cli": "bin/myback-sdk-cli.ts"
+    "myback-sdk-cli": "build/bin/myback-sdk-cli.js"
   },
   "dependencies": {
     "@vue/cli-service": "~5.0.0",

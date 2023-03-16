@@ -2,9 +2,9 @@
 
 import AppRoot from 'app-root-path'
 import minimist from 'minimist'
-import { ConfigType, createSQLiteDatabase, getDefaultConfigs } from '../src/test-server/process-config'
-import TestServer from '../src/test-server'
-import { transformModuleConfig } from '../src/bundle'
+import { ConfigType, createSQLiteDatabase, getDefaultConfigs } from '../test-server/process-config'
+import TestServer from '../test-server'
+import { transformModuleConfig } from '../bundle'
 import childProcess from 'child_process'
 import fse from 'fs-extra'
 import path from 'path'

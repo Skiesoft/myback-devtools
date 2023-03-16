@@ -25,12 +25,10 @@ jobs:
         cache-dependency-path: sdk/package-lock.json
     - name: Install ts-node globally.
       run: npm i -g ts-node
-    - name: Install dependencies.
+    - name: Install dependencies and build package.
       run: npm ci
-    - name: Build NPM package.
-      run: npm run build
     - name: Make CLI executable.
-      run: chmod +x ./bin/myback-sdk-cli.ts
+      run: chmod +x ./build/bin/myback-sdk-cli.js
     - name: Link CLI.
       run: npm link
     - name: Launch fake API
