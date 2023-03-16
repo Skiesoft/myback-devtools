@@ -6,7 +6,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "docs": "typedoc --entryPointStrategy expand --out ./docs src/api",
+    "docs": "typedoc --entryPointStrategy expand --out ./out src/api",
     "serve": "myback-sdk-cli serve",
     "build": "tsc -p ./tsconfig.build.json",
     "prepublish": "tsc -p ./tsconfig.build.json",
