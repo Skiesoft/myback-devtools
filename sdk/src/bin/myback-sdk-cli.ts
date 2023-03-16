@@ -1,4 +1,4 @@
-#!/usr/bin/env -S ts-node-script -T
+#!/usr/bin/env ts-node-script
 
 import AppRoot from 'app-root-path'
 import minimist from 'minimist'
