@@ -4,25 +4,38 @@ import AppRoot from 'app-root-path'
 import { AttributeProperty } from '../api/decorator'
 import { Model } from '..'
 
-interface ModuleScalarConfig {
+interface ModuleConfigGeneral {
   key: string
-  type: 'integer' | 'float' | 'string' | 'boolean'
-  default?: string | number | boolean
-
+  userspace?: boolean
+  description?: string
 }
 
-interface ModuleOptionConfig {
-  key: string
+interface ModuleStringConfig extends ModuleConfigGeneral {
+  type: 'string'
+  default?: string
+}
+
+interface ModuleNumberConfig extends ModuleConfigGeneral {
+  type: 'integer' | 'float' 
+  default?: number
+}
+
+interface ModuleBooleanConfig extends ModuleConfigGeneral {
+  type: 'boolean' 
+  default?: boolean
+}
+
+type ModuleScalarConfig = ModuleStringConfig | ModuleNumberConfig | ModuleBooleanConfig;
+
+interface ModuleOptionConfig extends ModuleConfigGeneral {
   type: 'options'
   multipleChoice?: boolean
   options: string[]
-  default: string
+  default?: string
 }
 
-interface ModuleListConfig {
-  key: string
+interface ModuleListConfig extends ModuleConfigGeneral {
   type: 'list'
-  userspace?: boolean
   columns: Array<ModuleScalarConfig | ModuleOptionConfig>
   default?: any[]
 }
