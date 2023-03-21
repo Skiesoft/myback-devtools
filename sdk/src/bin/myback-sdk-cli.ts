@@ -34,7 +34,7 @@ if (args._[0] === 'serve') {
 if (args.noVue !== true) {
   // Copy public directory to app root.
   const targetPath = `${AppRoot as unknown as string}/public`
-  fse.copySync(path.join(__dirname, '/../public'), targetPath, { overwrite: true })
+  fse.copySync(path.join(__dirname, '../../public'), targetPath, { overwrite: true })
   // Write default configs.
   if (config.configables !== undefined) {
     const defaults = getDefaultConfigs(config.configables)
