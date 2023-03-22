@@ -1,12 +1,12 @@
 import { expect, test } from '@jest/globals'
-import { ConfigType } from 'src/test-server/process-config'
 import { transformModuleConfig } from '../src/bundle'
+import { ModuleConfig } from '../src/module-config'
 import { Sample1 } from './models/sample1'
 import { Sample2 } from './models/sample2'
 import fs from 'fs'
 
 test('compile models', () => {
-  const config: ConfigType = {
+  const config: ModuleConfig = {
     name: 'test',
     description: 'testing',
     models: [Sample1, Sample2]

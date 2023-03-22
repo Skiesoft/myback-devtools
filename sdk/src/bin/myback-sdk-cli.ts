@@ -2,9 +2,10 @@
 
 import AppRoot from 'app-root-path'
 import minimist from 'minimist'
-import { ConfigType, createSQLiteDatabase, getDefaultConfigs } from '../test-server/process-config'
+import { createSQLiteDatabase, getDefaultConfigs } from '../test-server/process-config'
 import TestServer from '../test-server'
 import { transformModuleConfig } from '../bundle'
+import { ModuleConfig } from '../module-config'
 import childProcess from 'child_process'
 import fse from 'fs-extra'
 import path from 'path'
@@ -17,7 +18,7 @@ const args = minimist(rawArgv, {
   ]
 })
 
-const config: ConfigType = (require(`${AppRoot as unknown as string}/module.config`) as unknown) as ConfigType
+const config: ModuleConfig = (require(`${AppRoot as unknown as string}/module.config`) as unknown) as ModuleConfig
 
 if (args._[0] === 'serve') {
   if (args.createDB === true) {

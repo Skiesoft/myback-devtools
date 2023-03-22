@@ -3,53 +3,9 @@ import Database from 'better-sqlite3'
 import AppRoot from 'app-root-path'
 import { AttributeProperty } from '../api/decorator'
 import { Model } from '..'
+import { Configable, ModuleConfig } from '../module-config'
 
-interface ModuleConfigGeneral {
-  key: string
-  userspace?: boolean
-  description?: string
-}
-
-interface ModuleStringConfig extends ModuleConfigGeneral {
-  type: 'string'
-  default?: string
-}
-
-interface ModuleNumberConfig extends ModuleConfigGeneral {
-  type: 'integer' | 'float' 
-  default?: number
-}
-
-interface ModuleBooleanConfig extends ModuleConfigGeneral {
-  type: 'boolean' 
-  default?: boolean
-}
-
-type ModuleScalarConfig = ModuleStringConfig | ModuleNumberConfig | ModuleBooleanConfig;
-
-interface ModuleOptionConfig extends ModuleConfigGeneral {
-  type: 'options'
-  multipleChoice?: boolean
-  options: string[]
-  default?: string
-}
-
-interface ModuleListConfig extends ModuleConfigGeneral {
-  type: 'list'
-  columns: Array<ModuleScalarConfig | ModuleOptionConfig>
-  default?: any[]
-}
-
-type ModuleConfig = ModuleScalarConfig | ModuleOptionConfig | ModuleListConfig
-
-export interface ConfigType {
-  name: string
-  description?: string
-  models?: any[]
-  configables?: ModuleConfig[]
-}
-
-export function createSQLiteDatabase (config: ConfigType): void {
+export function createSQLiteDatabase (config: ModuleConfig): void {
   if (config.models === undefined) {
     throw new Error('No model in config file, can not create test database.')
   }
@@ -97,7 +53,7 @@ export function createSQLiteDatabase (config: ConfigType): void {
   }
 }
 
-export function getDefaultConfigs (configs: ModuleConfig[]): Record<string, any> {
+export function getDefaultConfigs (configs: Configable[]): Record<string, any> {
   const res: Record<string, any> = {}
   for (const conf of configs) {
     res[conf.key] = conf.default

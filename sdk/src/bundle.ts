@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import fs from 'fs'
 import { Model } from 'src'
-import { ConfigType } from './test-server/process-config'
+import { ModuleConfig } from './module-config'
 
 const outDir: string = 'dist'
 
@@ -24,9 +24,9 @@ function parseAttributes (CustomModel: typeof Model): object {
   return columns
 }
 
-export function transformModuleConfig (ModuleConfig: ConfigType): void {
-  if (ModuleConfig.models !== undefined) {
-    ModuleConfig.models = ModuleConfig.models.map((CustomModel: typeof Model) => ({
+export function transformModuleConfig (config: ModuleConfig): void {
+  if (config.models !== undefined) {
+    config.models = config.models.map((CustomModel: typeof Model) => ({
       name: CustomModel.getTableName(),
       attributes: parseAttributes(CustomModel)
     }))
@@ -34,5 +34,5 @@ export function transformModuleConfig (ModuleConfig: ConfigType): void {
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true })
   }
-  fs.writeFileSync(`${outDir}/module.config.json`, JSON.stringify(ModuleConfig))
+  fs.writeFileSync(`${outDir}/module.config.json`, JSON.stringify(config))
 }

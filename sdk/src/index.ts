@@ -5,6 +5,7 @@ import * as _QueryBuilder from './api/query-builder'
 import { attribute as _attribute } from './api/decorator'
 import { Storage as _Storage } from './api/storage'
 import { Config as _Config } from './api/config'
+import type { ModuleConfig as _ModuleConfig } from './module-config'
 
 export const SDK = _SDK
 export const HTTP_METHOD = _HTTP_METHOD
@@ -14,3 +15,4 @@ export const QueryBuilder = _QueryBuilder
 export const attribute = _attribute
 export const Storage = _Storage
 export const Config = _Config
+export type ModuleConfig = _ModuleConfig
