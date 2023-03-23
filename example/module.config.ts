@@ -1,7 +1,8 @@
 import { List } from './src/model/list'
 import { Item } from './src/model/item'
+import { ModuleConfig } from '@myback/sdk'
 
-module.exports = {
+const config: ModuleConfig = {
   name: 'Simple Todo List',
   description: 'Example module of a simple todo list.',
   models: [List, Item],
@@ -24,3 +25,5 @@ module.exports = {
     }
   ]
 }
+
+module.exports = config
