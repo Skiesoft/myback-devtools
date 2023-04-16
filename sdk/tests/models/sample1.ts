@@ -13,7 +13,7 @@ export class Sample1 extends Model {
     age?: number
 
   @attribute({ type: 'date' })
-    date?: Date
+    date: Date = new Date()
 
   @attribute({ type: 'datetime' })
     datetime?: Date

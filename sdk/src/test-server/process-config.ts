@@ -19,18 +19,35 @@ export function createSQLiteDatabase (config: ModuleConfig): void {
     const constraints: string[] = []
     for (const attr of attributes) {
       const prop: AttributeProperty = Reflect.getMetadata('property', model, attr)
+      let defaultValue: any = (model)[attr]
       let type: string = prop.type
+
       switch (type) {
-        case 'relation':
         case 'boolean':
+          type = 'INTEGER'
+          if (defaultValue !== undefined) {
+            defaultValue = Boolean(defaultValue)
+          }
+          break
+        case 'relation':
         case 'int':
           type = 'INTEGER'
           break
         case 'float':
           type = 'REAL'
           break
+        case 'datetime':
+        case 'date':
+          type = type.toUpperCase() // DATE and DATETIME
+          if (defaultValue !== undefined) {
+            defaultValue = `'${(defaultValue as Date).toISOString()}'`
+          }
+          break
         case 'string':
           type = 'TEXT'
+          if (defaultValue != null) {
+            defaultValue = `'${defaultValue as string}'`
+          }
           break
       }
 
@@ -39,8 +56,7 @@ export function createSQLiteDatabase (config: ModuleConfig): void {
       if (prop.unique === true) col += 'UNIQUE '
       if (prop.autoIndex === true) col += 'AUTOINCREMENT '
       if (prop.nullable !== true) col += 'NOT NULL '
-      const defaultValue = (model)[attr]
-      if (defaultValue !== undefined) col += `DEFAULT ${type === 'TEXT' ? `'${defaultValue as string}'` : defaultValue as number} `
+      if (defaultValue !== undefined) col += `DEFAULT ${defaultValue as string}`
       columns.push(col)
       if (prop.type === 'relation') {
         const Foreign: typeof Model = Reflect.getMetadata('design:type', model, attr)
