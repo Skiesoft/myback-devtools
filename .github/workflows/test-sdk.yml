@@ -31,10 +31,12 @@ jobs:
       run: chmod +x ./build/bin/myback-sdk-cli.js
     - name: Link CLI.
       run: npm link
-    - name: Launch fake API
-      run: npx myback-sdk-cli serve --noVue &
     - name: Run testsuits.
       run: npm test
+      env:
+        API_TOKEN: ${{secrets.api_token}}
+        DATABASE_ID: ${{secrets.database_id}}
+        STORAGE_ID: ${{secrets.storage_id}}
 
     - name: Archive npm failure logs
       uses: actions/upload-artifact@v2

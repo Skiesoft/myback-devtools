@@ -3,7 +3,7 @@ import { HTTP_METHOD, SDK } from '../sdk'
 import { v4 as uuidv4 } from 'uuid'
 
 export interface FileInformation {
-  filename: string
+  path: string
   url: string
 }
 
@@ -16,29 +16,28 @@ export class Storage {
   /**
    * Constructor of the controller of resource.
    *
-   * @param id the identifier of the storage.
    */
-  constructor (id: string = 'default') {
-    this.id = id
+  constructor () {
+    this.id = SDK.config.STORAGE!
   }
 
   /**
-   * Upload file to storage with given filename.
+   * Upload file to storage with given path.
    *
-   * @param filename
+   * @param path
    * @param file
    * @returns
    */
-  async upload (filename: string, file: File): Promise<FileInformation> {
+  async upload (path: string, file: File): Promise<FileInformation> {
     const formData = new FormData()
-    formData.append('file', file, filename)
+    formData.append('file', file, path)
 
-    const res = await this.request(HTTP_METHOD.POST, filename, formData)
-    return res.data.data
+    const res = await this.request(HTTP_METHOD.POST, path, formData)
+    return res.data
   }
 
   /**
-   * Upload file to storage with uuid filename.
+   * Upload file to storage with uuid path.
    *
    * @param file the file to upload
    * @param dir the directory to upload the file.
@@ -51,10 +50,10 @@ export class Storage {
   /**
    * Delete the file from the storage.
    *
-   * @param filename
+   * @param path
    */
-  async destroy (filename: string): Promise<void> {
-    await this.request(HTTP_METHOD.DELETE, filename)
+  async destroy (path: string): Promise<void> {
+    await this.request(HTTP_METHOD.DELETE, path)
   }
 
   /**

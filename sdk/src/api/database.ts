@@ -14,10 +14,9 @@ export class Database {
   /**
    * Constructor of the controller of resource.
    *
-   * @param id the identifier of the database.
    */
-  constructor (id: string = 'default') {
-    this.id = id
+  constructor () {
+    this.id = SDK.config.DATABASE!
   }
 
   private queryToMatcher (query: Query): string {
@@ -44,8 +43,7 @@ export class Database {
     } else {
       res = await this.request(CustomEntity, HTTP_METHOD.PUT, `?matcher=${this.entityToMatcher(entity)}`, { data: entity.getProperties() })
     }
-    Object.assign(entity, res.data.data)
-    entity.updateOldProperties()
+    entity.loadOldData(res.data.data)
   }
 
   /**
@@ -122,7 +120,7 @@ export class Database {
 
   public async loadRelation<T extends Model>(CustomEntity: typeof Model, entity: T): Promise<any> {
     const res = await this.request(CustomEntity, HTTP_METHOD.GET, `get-relation?&matcher=${this.entityToMatcher(entity)}`)
-    entity = Object.assign(entity, res.data.data)
+    entity.loadOldData(res.data.data)
     return entity
   }
 

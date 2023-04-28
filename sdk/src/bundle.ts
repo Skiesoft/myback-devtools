@@ -24,15 +24,20 @@ function parseAttributes (CustomModel: typeof Model): object {
   return columns
 }
 
-export function transformModuleConfig (config: ModuleConfig): void {
+export function exportModuleConfig (config: ModuleConfig): ModuleConfig {
   if (config.models !== undefined) {
     config.models = config.models.map((CustomModel: typeof Model) => ({
       name: CustomModel.getTableName(),
       attributes: parseAttributes(CustomModel)
     }))
   }
+  return config
+}
+
+export function writeModuleConfig (config: ModuleConfig): void {
+  const content = JSON.stringify(exportModuleConfig(config))
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true })
   }
-  fs.writeFileSync(`${outDir}/module.config.json`, JSON.stringify(config))
+  fs.writeFileSync(`${outDir}/module.config.json`, content)
 }

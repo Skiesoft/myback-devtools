@@ -22,7 +22,6 @@ jobs:
       - run: npm ci
       - run: chmod +x ./build/bin/myback-sdk-cli.js
       - run: npm link
-      - run: npx myback-sdk-cli serve --noVue &
       - run: npm test
 
   publish-npm:

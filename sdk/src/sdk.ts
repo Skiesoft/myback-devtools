@@ -9,13 +9,22 @@ export enum HTTP_METHOD {
 
 interface SDKConfig {
   API_TOKEN: string
-  ENDPOINT: string
-  VERSION: string
-  DATABASE: string
+  DATABASE?: string
+  STORAGE?: string
+}
+
+declare global {
+  interface Window {
+    API_TOKEN?: string
+    DATABASE?: string
+    STORAGE?: string
+  }
 }
 
 export class SDK {
-  public static config: SDKConfig | null = null
+  private static readonly ENDPOINT: string = 'https://api.myback.app'
+  private static readonly VERSION: string = 'v1'
+  public static config: SDKConfig
 
   /**
    * Initialize the SDK.
@@ -23,7 +32,11 @@ export class SDK {
    * @param config configuration for SDK.
    */
   public static init (config: SDKConfig): void {
-    this.config = config
+    this.config = {
+      API_TOKEN: window.API_TOKEN ?? config.API_TOKEN,
+      DATABASE: window.DATABASE ?? config.DATABASE,
+      STORAGE: window.STORAGE ?? config.STORAGE
+    }
   }
 
   /**
@@ -43,7 +56,7 @@ export class SDK {
     if (requestBody instanceof FormData) {
       headers['Content-Type'] = 'multipart/form-data'
     }
-    const { ENDPOINT, VERSION } = this.config
+    const { ENDPOINT, VERSION } = this
     switch (method) {
       case HTTP_METHOD.GET:
         return await axios.get(`${ENDPOINT}/${VERSION}/${path}`, { headers })

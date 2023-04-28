@@ -18,9 +18,26 @@ export class Model implements Record<string, any> {
    */
   public static loadOldObject (CustomeEntity: typeof Model, props: any = {}): any {
     const obj = new CustomeEntity()
-    Object.assign(obj, props)
-    obj.updateOldProperties()
+    obj.loadOldData(props)
     return obj
+  }
+
+  public loadOldData (props: any = {}): void {
+    for (const key of this._attributes) {
+      const loweredKey = key.toLowerCase()
+      if (props[loweredKey] === undefined) continue
+      const attr: AttributeProperty = Reflect.getMetadata('property', this, key)
+      switch (attr.type) {
+        case 'date':
+        case 'datetime':
+          (this as any)[key] = new Date(props[loweredKey] + ' UTC')
+          break
+        default:
+          (this as any)[key] = props[loweredKey]
+          break
+      }
+    }
+    this.updateOldProperties()
   }
 
   public static getTableName (): string {
@@ -53,7 +70,16 @@ export class Model implements Record<string, any> {
           val = (val as any)[primaryKey]
         }
         if (val instanceof Date) {
-          val = val.toISOString()
+          switch (prop.type) {
+            case 'date':
+              val.setUTCSeconds(0)
+              val.setUTCMinutes(0)
+              val.setUTCHours(0)
+            case 'datetime':
+              val.setUTCMilliseconds(0)
+              val = val.toISOString()
+              break
+          }
         }
         res[attr] = val
       }
