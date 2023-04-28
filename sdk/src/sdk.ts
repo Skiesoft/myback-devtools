@@ -33,9 +33,17 @@ export class SDK {
    */
   public static init (config: SDKConfig): void {
     this.config = {
-      API_TOKEN: window.API_TOKEN ?? config.API_TOKEN,
-      DATABASE: window.DATABASE ?? config.DATABASE,
-      STORAGE: window.STORAGE ?? config.STORAGE
+      API_TOKEN: config.API_TOKEN,
+      DATABASE: config.DATABASE,
+      STORAGE: config.STORAGE
+    }
+
+    if( typeof window !== 'undefined' ) {
+      this.config = {
+        API_TOKEN: window.API_TOKEN ?? config.API_TOKEN,
+        DATABASE: window.DATABASE ?? config.DATABASE,
+        STORAGE: window.STORAGE ?? config.STORAGE
+      }
     }
   }
 
