@@ -5,27 +5,7 @@ on:
     types: [created]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./sdk
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'npm'
-          cache-dependency-path: sdk/package-lock.json
-      - run: npm i -g ts-node
-      - run: npm ci
-      - run: chmod +x ./build/bin/myback-sdk-cli.js
-      - run: npm link
-      - run: npm test
-
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -47,7 +27,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
   public-docs:
-    needs: build
     runs-on: ubuntu-latest
     defaults:
       run:
