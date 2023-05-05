@@ -4,20 +4,20 @@ import { Sample2 } from './sample2'
 export class Sample1 extends Model {
   protected static tableName: string = 'sample1'
   @attribute({ primary: true, autoIndex: true, type: 'int' })
-    id?: number
+    id: number
 
   @attribute({ type: 'string', unique: true })
-    name?: string
+    name: string
 
   @attribute({ type: 'int' })
-    age?: number
+    age: number
 
   @attribute({ type: 'date' })
     date: Date = new Date()
 
   @attribute({ type: 'datetime' })
-    datetime?: Date
+    datetime: Date
 
   @attribute({ type: 'relation', nullable: true })
-    belongsTo?: Sample2
+    belongsTo: Sample2
 }
