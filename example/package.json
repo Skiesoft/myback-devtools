@@ -7,7 +7,7 @@
     "build": "myback-sdk-cli build"
   },
   "dependencies": {
-    "@myback/sdk": "^0.5.2",
+    "@myback/sdk": "^0.6.2",
     "core-js": "^3.8.3",
     "vue": "^3.2.13"
   },

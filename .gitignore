@@ -2,9 +2,6 @@
 */build/
 */out/
 
-# SQLite Database fie
-**/*.db
-
 # VS Code
 .vscode
 # Logs

@@ -3,20 +3,10 @@ import { SDK } from '@myback/sdk'
 import App from './App.vue'
 import bootstrap from './bootstrap'
 
-declare global {
-  interface Window {
-    API_TOKEN: string
-    ENDPOINT: string
-    VERSION: string
-    DATABASE: string
-  }
-}
-
 SDK.init({
-  API_TOKEN: window.API_TOKEN ?? 'DEVELOPMENT',
-  ENDPOINT: window.ENDPOINT ?? 'http://localhost:3000',
-  VERSION: 'v1',
-  DATABASE: window.DATABASE ?? 'default'
+  API_TOKEN: 'YOUR_ADMIN_API_KEY',
+  DATABASE: 'YOUR_DATABASE_ID',
+  STORAGE: 'YOUR_STORAGE_ID',
 })
 
 bootstrap().then(() => {
