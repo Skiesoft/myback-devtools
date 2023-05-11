@@ -1,4 +1,5 @@
 import axios, { AxiosResponse, RawAxiosRequestHeaders } from 'axios'
+import FormData from 'form-data'
 
 export enum HTTP_METHOD {
   GET,
