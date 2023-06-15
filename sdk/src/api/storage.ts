@@ -49,11 +49,12 @@ export class Storage {
 
   /**
    * Delete the file from the storage.
+   * If you want to delete a directory, set recursive to true.
    *
    * @param path
    */
-  async destroy (path: string): Promise<void> {
-    await this.request(HTTP_METHOD.DELETE, path)
+  async destroy (path: string, recursive: boolean = false): Promise<void> {
+    await this.request(HTTP_METHOD.DELETE, recursive ? `${path}?recursive=1` : path)
   }
 
   /**
