@@ -75,7 +75,7 @@ export class Database {
    * @returns
    */
   async page (CustomEntity: typeof Model, pageId: number, limit: number = 24): Promise<any[]> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}`)
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `?pageSize=${limit}&page=${pageId}`)
     return res.data.data.map((properties: any) => Model.loadOldObject(CustomEntity, properties))
   }
 
@@ -89,7 +89,7 @@ export class Database {
    * @returns
    */
   async find (CustomEntity: typeof Model, query: Query, pageId: number = 0, limit: number = 24): Promise<any[]> {
-    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `query?pageSize=${limit}&page=${pageId}&matcher=${this.queryToMatcher(query)}`)
+    const res = await this.request(CustomEntity, HTTP_METHOD.GET, `?pageSize=${limit}&page=${pageId}&matcher=${this.queryToMatcher(query)}`)
     return res.data.data.map((properties: any) => Model.loadOldObject(CustomEntity, properties))
   }
 
