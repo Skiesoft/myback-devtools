@@ -63,12 +63,12 @@ test('Test save relation', async () => {
   await db.save(Sample2, tmp)
   s1.belongsTo = tmp
   await db.save(Sample1, s1)
-  const query = QueryBuilder.equal('belongsTo', tmp.id!)
+  const query = QueryBuilder.equal('belongsTo', tmp.id)
   expect((await db.find(Sample1, query))).toStrictEqual([s1])
 })
 
 test('Test load relation', async () => {
-  const tmp: Sample1 = (await db.find(Sample1, QueryBuilder.equal('id', s1.id!)))[0]
+  const tmp: Sample1 = (await db.find(Sample1, QueryBuilder.equal('id', s1.id)))[0]
   await db.loadRelation(Sample1, tmp)
   expect(tmp.belongsTo?.text).toBe('random')
 })

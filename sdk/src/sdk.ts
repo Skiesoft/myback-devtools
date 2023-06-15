@@ -39,7 +39,7 @@ export class SDK {
       STORAGE: config.STORAGE
     }
 
-    if( typeof window !== 'undefined' ) {
+    if (typeof window !== 'undefined') {
       this.config = {
         API_TOKEN: window.API_TOKEN ?? config.API_TOKEN,
         DATABASE: window.DATABASE ?? config.DATABASE,
