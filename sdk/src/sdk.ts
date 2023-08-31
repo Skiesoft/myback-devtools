@@ -66,15 +66,31 @@ export class SDK {
       headers['Content-Type'] = 'multipart/form-data'
     }
     const { ENDPOINT, VERSION } = this
-    switch (method) {
-      case HTTP_METHOD.GET:
-        return await axios.get(`${ENDPOINT}/${VERSION}/${path}`, { headers })
-      case HTTP_METHOD.POST:
-        return await axios.post(`${ENDPOINT}/${VERSION}/${path}`, requestBody, { headers })
-      case HTTP_METHOD.PUT:
-        return await axios.put(`${ENDPOINT}/${VERSION}/${path}`, requestBody, { headers })
-      case HTTP_METHOD.DELETE:
-        return await axios.delete(`${ENDPOINT}/${VERSION}/${path}`, { headers })
+    try {
+      switch (method) {
+        case HTTP_METHOD.GET:
+          return await axios.get(`${ENDPOINT}/${VERSION}/${path}`, { headers })
+        case HTTP_METHOD.POST:
+          return await axios.post(`${ENDPOINT}/${VERSION}/${path}`, requestBody, { headers })
+        case HTTP_METHOD.PUT:
+          return await axios.put(`${ENDPOINT}/${VERSION}/${path}`, requestBody, { headers })
+        case HTTP_METHOD.DELETE:
+          return await axios.delete(`${ENDPOINT}/${VERSION}/${path}`, { headers })
+      }
+    } catch (err: any) {
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+
+        // Print message if server have send message.
+        if (err.response.data.message) {
+          throw new Error(err.response.data.message)
+        } else {
+          throw new Error(JSON.stringify(err.response.data))
+        }
+      } else {
+        throw err
+      }
     }
   }
 }
