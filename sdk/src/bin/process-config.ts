@@ -1,7 +1,7 @@
 import 'reflect-metadata'
-import { Configable, ModuleConfig } from './module-config'
-import { exportModuleConfig } from './bundle'
-import { HTTP_METHOD, SDK } from './sdk'
+import { Configable, ModuleConfig } from '../module-config'
+import { exportModuleConfig } from '../bundle'
+import { HTTP_METHOD, SDK } from '../sdk'
 import dotenv from 'dotenv'
 
 export async function updateRemoteSchema (config: ModuleConfig): Promise<void> {

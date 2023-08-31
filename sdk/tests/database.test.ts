@@ -2,7 +2,7 @@ import { beforeAll, expect, test } from '@jest/globals'
 import { Database, QueryBuilder, SDK } from '../src'
 import { Sample1 } from './models/sample1'
 import { Sample2 } from './models/sample2'
-import { updateRemoteSchema } from '../src/process-config'
+import { updateRemoteSchema } from '../src/bin/process-config'
 import dotenv from 'dotenv'
 dotenv.config()
 

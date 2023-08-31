@@ -29,23 +29,23 @@ export class SDK {
 
   /**
    * Initialize the SDK.
+   * 
+   * By default it would initialize with configuration in the environment.
+   * If the config parameter is given, it would overwrite the environment configuration.
    *
    * @param config configuration for SDK.
    */
-  public static init (config: SDKConfig): void {
-    this.config = {
-      API_TOKEN: config.API_TOKEN,
-      DATABASE: config.DATABASE,
-      STORAGE: config.STORAGE
+  public static init (config?: SDKConfig): void {
+    const c = {
+      API_TOKEN: window.API_TOKEN,
+      DATABASE: window.DATABASE,
+      STORAGE: window.STORAGE
     }
-
-    if (typeof window !== 'undefined') {
-      this.config = {
-        API_TOKEN: window.API_TOKEN ?? config.API_TOKEN,
-        DATABASE: window.DATABASE ?? config.DATABASE,
-        STORAGE: window.STORAGE ?? config.STORAGE
-      }
+    if (config !== null) Object.assign(c, config)
+    if (c.API_TOKEN === undefined) {
+      throw new Error('API Token not found.')
     }
+    this.config = c as SDKConfig
   }
 
   /**
@@ -78,12 +78,12 @@ export class SDK {
           return await axios.delete(`${ENDPOINT}/${VERSION}/${path}`, { headers })
       }
     } catch (err: any) {
-      if (err.response) {
+      if (err.response !== undefined) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
 
         // Print message if server have send message.
-        if (err.response.data.message) {
+        if (err.response.data.message !== undefined) {
           throw new Error(err.response.data.message)
         } else {
           throw new Error(JSON.stringify(err.response.data))
