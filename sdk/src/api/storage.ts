@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios'
 import { HTTP_METHOD, SDK } from '../sdk'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -8,64 +7,46 @@ export interface FileInformation {
 }
 
 /**
- * Storage serves tatic files.
+ * Storage serve static files.
  */
-export class Storage {
-  private readonly id: string
-
-  /**
-   * Constructor of the controller of resource.
-   *
-   */
-  constructor () {
-    this.id = SDK.config.STORAGE!
-  }
-
+export default {
   /**
    * Upload file to storage with given path.
    *
-   * @param path
-   * @param file
+   * @param id the id of stroage.
+   * @param path the path to the file.
+   * @param content the content of the file.
    * @returns
    */
-  async upload (path: string, file: File): Promise<FileInformation> {
+  async upload (id: string, path: string, file: File): Promise<FileInformation> {
     const formData = new FormData()
     formData.append('file', file, path)
 
-    const res = await this.request(HTTP_METHOD.POST, path, formData)
+    const res = await SDK.request(HTTP_METHOD.POST, `storage/${id}/file/${path}`, formData)
     return res.data
-  }
+  },
 
   /**
    * Upload file to storage with uuid path.
    *
-   * @param file the file to upload
+   * @param id the id of stroage.
+   * @param content the file to upload
    * @param dir the directory to upload the file.
    * @returns
    */
-  async uploadWithAutoname (file: File, dir: string = ''): Promise<FileInformation> {
-    return await this.upload(`${dir}/${uuidv4()}`, file)
-  }
+  async uploadWithAutoname (id: string, content: File, dir: string = ''): Promise<FileInformation> {
+    return await this.upload(id, `${dir}/${uuidv4()}`, content)
+  },
 
   /**
    * Delete the file from the storage.
    * If you want to delete a directory, set recursive to true.
    *
-   * @param path
+   * @param id the id of the storage.
+   * @param path the path to delete.
+   * @param [recursive=false] whether to delete recursively.
    */
-  async destroy (path: string, recursive: boolean = false): Promise<void> {
-    await this.request(HTTP_METHOD.DELETE, recursive ? `${path}?recursive=1` : path)
-  }
-
-  /**
-   * API request helper function.
-   *
-   * @param method the HTTP method for the requst.
-   * @param path the API path in the entity level.
-   * @param requestBody optional payload.
-   * @returns
-   */
-  private async request (method: HTTP_METHOD, path: string, requestBody: FormData | object = {}): Promise<AxiosResponse> {
-    return await SDK.request(method, `storage/${this.id}/file/${path}`, requestBody)
+  async destroy (id: string, path: string, recursive: boolean = false): Promise<void> {
+    await SDK.request(HTTP_METHOD.DELETE, `storage/${id}/file/${recursive ? `${path}?recursive=1` : path}`)
   }
 }

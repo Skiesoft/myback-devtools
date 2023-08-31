@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
 import { SDK, Storage } from '../src'
-import { FileInformation } from 'src/api/storage'
+import { FileInformation } from 'src/orm/storage'
 import axios from 'axios'
 import dotenv from 'dotenv'
 dotenv.config()
