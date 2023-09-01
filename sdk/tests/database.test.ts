@@ -1,4 +1,5 @@
 import { beforeAll, expect, test } from '@jest/globals'
+import DatabaseAPI from '../src/api/database'
 import { Database, QueryBuilder, SDK } from '../src'
 import { Sample1 } from './models/sample1'
 import { Sample2 } from './models/sample2'
@@ -18,6 +19,24 @@ beforeAll(async () => {
     description: 'testing',
     models: [Sample1, Sample2]
   })
+})
+
+test('Test list database tables', async () => {
+  const models = await DatabaseAPI.listModels(SDK.config.DATABASE!)
+  expect(models).toStrictEqual([ { id: 'sample2' }, { id: 'sample1' } ])
+})
+
+test('Test save object', async () => {
+  s1.name = 'Test#& name'
+  s1.age = 20
+  s1.date = new Date()
+  s1.datetime = new Date()
+  await db.save(Sample1, s1)
+  s2.name = 'Another name'
+  s2.age = 90
+  s2.date = new Date()
+  s2.datetime = new Date()
+  await db.save(Sample1, s2)
 })
 
 const db = new Database()
